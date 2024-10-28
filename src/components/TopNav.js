@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import env from '../config/env.json';
-import '../index.css';
+import './TopNav.css';
 
 const TopNav = ({ toggleTheme, isDarkMode }) => {
   return (

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import env from '../config/env.json';
 import '../index.css';
+import './Sidebar.css';
 
 const Sidebar = () => {
   const [profileImage, setProfileImage] = useState('');

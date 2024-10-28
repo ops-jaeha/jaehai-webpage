@@ -1,6 +1,7 @@
 import React from 'react';
 import env from '../config/env.json';
 import '../index.css';
+import './Contact.css';
 
 const Contact = () => {
   return (

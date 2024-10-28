@@ -1,0 +1,44 @@
+.navbar {
+  background-color: var(--bg-color);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.menu-items {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.menu-link {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1rem;
+  padding-right: 0.5rem;
+}
+
+.brand-link:hover,
+.menu-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}

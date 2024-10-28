@@ -5,7 +5,7 @@ import Sidebar from './components/Sidebar';
 import Contact from './pages/Contact';
 import Post from './pages/Post';
 import Portfolio from './pages/Portfolio';
-import './index.css';
+import './App.css';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(
@@ -28,7 +28,6 @@ function App() {
   return (
     <Router>
       <TopNav toggleTheme={toggleTheme} isDarkMode={isDarkMode} />{' '}
-      {/* 최상단에 고정된 TopNav */}
       <div className="app-container">
         <Sidebar />
         <div className="main-content">

@@ -24,6 +24,20 @@ body {
   width: 100%;
 }
 
+.app-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.main-content {
+  display: flex;
+  width: 100%;
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
 .brand-link,
 .menu-link {
   text-decoration: none;

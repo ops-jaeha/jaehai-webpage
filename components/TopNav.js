@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import env from '../config/env.json';
 import './TopNav.css';
 
@@ -9,21 +9,21 @@ const TopNav = ({ toggleTheme, isDarkMode }) => {
       <div className="navbar-container">
         <div className="navbar-content">
           <div className="navbar-brand">
-            <a href="/" className="brand-link">
+            <Link href="/" className="brand-link">
               <span className="brand-text">
                 <strong>{env.user_name}</strong>.Opslog
               </span>
-            </a>
+            </Link>
           </div>
           <div className="navbar-menu">
             <div className="menu-items">
-              <Link to="/post" className="menu-link">
+              <Link href="/post" className="menu-link">
                 Post
               </Link>
-              <Link to="/portfolio" className="menu-link">
+              <Link href="/portfolio" className="menu-link">
                 Portfolio
               </Link>
-              <Link to="/contact" className="menu-link">
+              <Link href="/contact" className="menu-link">
                 Contact
               </Link>
               <button className="theme-toggle" onClick={toggleTheme}>

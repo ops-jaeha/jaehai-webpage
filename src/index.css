@@ -28,6 +28,7 @@ body {
 .menu-link {
   text-decoration: none;
   color: var(--text-color);
+  margin: 1rem;
 }
 
 .contact-link {

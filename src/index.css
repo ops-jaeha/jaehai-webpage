@@ -1,0 +1,215 @@
+/* 기본 라이트 모드 스타일 */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --border-color: #dddddd;
+  --box-bg-color: #f0f0f0; /* 라이트 모드 박스 배경색 */
+}
+
+/* 다크모드 스타일 */
+.dark-mode {
+  --bg-color: #1e1e1e;
+  --text-color: #ffffff;
+  --border-color: #333333;
+  --box-bg-color: #444444; /* 다크모드 박스 배경색 */
+}
+
+/* 공통 스타일 적용 */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.main-content {
+  display: flex;
+  width: 100%;
+  padding-top: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  justify-content: center;
+}
+
+.menu-items {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.menu-link {
+  text-decoration: none;
+  color: var(--text-color);
+  font-size: 1rem;
+  padding-right: 0.5rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.navbar {
+  background-color: var(--bg-color);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+}
+
+.brand-link,
+.menu-link {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+.brand-link:hover,
+.menu-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
+
+.contact-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5rem;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.contact-container {
+  text-align: center;
+}
+
+.logo-section {
+  margin-bottom: 1rem;
+}
+
+.contact-link {
+  color: var(--text-color);
+  font-size: 1.2rem;
+  text-decoration: none;
+}
+
+.contact-link:hover {
+  text-decoration: underline;
+}
+
+/* 레이아웃 설정 */
+.app-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.topnav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+}
+
+/* Sidebar 스타일 */
+.sidebar {
+  width: 20rem;
+  color: var(--text-color);
+  padding-left: 1rem;
+  padding-right: 2rem;
+  /* height: calc(100vh - 60px); */
+  top: 60px;
+}
+
+/* Sidebar 프로필 카드 스타일 */
+.profile-card {
+  background-color: var(--box-bg-color); /* 박스 배경색 변수 적용 */
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.profile-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.profile-role {
+  color: gray;
+  font-size: 0.9rem;
+}
+
+.profile-introduce {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-top: 0.5rem;
+}
+
+.default-page {
+  width: 100%;
+}
+
+/* Contact Links 박스 스타일 */
+.contact-links-box {
+  background-color: var(--box-bg-color); /* Contact Links 박스 배경색 */
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-radius: 8px;
+  align-content: center;
+  margin-top: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 0rem;
+}
+
+.contact-link {
+  color: var(--text-color);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  padding: 0.4rem 0; /* 상하 패딩을 0.4rem로 설정하여 균등하게 보이도록 */
+}
+
+.profile-title {
+  margin-block-start: 1.5rem;
+  margin-block-end: 0.5rem;
+}
+
+.contact-page {
+  width: 100%;
+}
+
+.contact-title {
+  margin-block-start: 1.5rem;
+  margin-block-end: 0rem;
+  padding-top: 1rem;
+}

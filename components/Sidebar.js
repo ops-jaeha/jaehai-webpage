@@ -1,4 +1,3 @@
-// components/Sidebar.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -12,7 +11,6 @@ const Sidebar = () => {
   const [profileImage, setProfileImage] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // GitHub 프로필 이미지 가져오기
   useEffect(() => {
     fetch(`https://api.github.com/users/${env.github_id}`)
       .then((response) => response.json())
@@ -21,7 +19,6 @@ const Sidebar = () => {
       });
   }, []);
 
-  // 다크 모드 초기 상태 설정
   useEffect(() => {
     const storedMode = JSON.parse(localStorage.getItem('isDarkMode'));
     if (storedMode !== null) {
@@ -29,7 +26,6 @@ const Sidebar = () => {
     }
   }, []);
 
-  // GitHub 로고 URL 설정
   const githubLogoSrc = isDarkMode
     ? 'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png'
     : 'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png';

@@ -1,4 +1,3 @@
-// app/layout.js
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -8,10 +7,8 @@ import './styles/Global.css';
 export default function RootLayout({ children }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // 로컬 스토리지에서 다크 모드 초기화
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // 브라우저 환경 확인
       const storedMode = localStorage.getItem('isDarkMode');
       if (storedMode !== null) {
         setIsDarkMode(storedMode === 'true');
@@ -19,7 +16,6 @@ export default function RootLayout({ children }) {
     }
   }, []);
 
-  // 다크 모드 변경 시 로컬 스토리지와 바디 클래스 업데이트
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // 브라우저 환경 확인

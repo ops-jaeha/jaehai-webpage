@@ -1,4 +1,3 @@
-// app/(pages)/contact/pages.js
 'use client';
 
 import { useEffect, useState } from 'react';

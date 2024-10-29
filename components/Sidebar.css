@@ -7,7 +7,7 @@
 }
 
 .profile-card {
-  background-color: var(--box-bg-color); /* 박스 배경색 변수 적용 */
+  background-color: var(--box-bg-color);
   padding: 1rem;
   border-radius: 8px;
   text-align: center;

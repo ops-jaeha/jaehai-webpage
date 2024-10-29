@@ -3,17 +3,8 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['avatars.githubusercontent.com'],
+    domains: ['avatars.githubusercontent.com', 'raw.githubusercontent.com'],
   },
-  // async redirects() {
-  //   return [
-  //     {
-  //       source: '/',
-  //       destination: '/post',
-  //       permanent: true,
-  //     },
-  //   ];
-  // },
 };
 
 export default nextConfig;

@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
+
+:root {
+  --primary: #ffffff;
+  --secondary: #d5d5d5;
+  --accent: #88c0d0;
+  --text: #020711;
+  --success: #566c42;
+  --terminal-green: #2b6c1e;
+}
+
+.dark-mode {
+  --primary: #1e1e1e;
+  --secondary: #333333;
+  --accent: #88c0d0;
+  --text: #ffffff;
+  --success: #566c42;
+  --terminal-green: #4fbc39;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--primary);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.typing-effect {
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 0.5rem;
+  border-right: 3px solid var(--accent);
+  animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  margin: 0 auto;
+  max-width: fit-content;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink-caret {
+  from,
+  to {
+    border-color: transparent;
+  }
+  50% {
+    border-color: var(--accent);
+  }
+}
+
+.title {
+  display: inline;
+  font-size: 2.5rem;
+}
+
+.terminal {
+  background: var(--secondary);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.terminal-header {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f56;
+}
+
+.terminal-button:nth-child(2) {
+  background: #ffbd2e;
+}
+
+.terminal-button:nth-child(3) {
+  background: #27c93f;
+}
+
+.command-line {
+  color: var(--terminal-green);
+}
+
+.terminal-text {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.skills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.skill-card {
+  background: var(--secondary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  opacity: inherit;
+}
+
+.skill-card:hover {
+  transform: translateY(-5px);
+}
+
+.projects {
+  margin: 3rem 0;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.project-card {
+  background: var(--secondary);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+.status-badge {
+  background: var(--success);
+  color: var(--primary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}

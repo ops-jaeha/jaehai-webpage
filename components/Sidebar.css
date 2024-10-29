@@ -1,20 +1,9 @@
-.contact-links-box {
-  background-color: var(--box-bg-color); /* Contact Links 박스 배경색 */
-  padding: 0.5rem;
-  padding-left: 1rem;
-  border-radius: 8px;
-  align-content: center;
-  margin-top: 1rem;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 .sidebar {
   width: 20rem;
   color: var(--text-color);
   padding-left: 1rem;
   padding-right: 2rem;
-  /* height: calc(100vh - 60px); */
-  top: 60px;
+  top: 1rem;
 }
 
 .profile-card {
@@ -22,7 +11,7 @@
   padding: 1rem;
   border-radius: 8px;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.9rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -39,23 +28,39 @@
 }
 
 .profile-role {
-  color: gray;
+  color: rgb(59, 59, 59);
   font-size: 0.9rem;
+}
+
+.dark-mode .profile-role {
+  color: #e0e0e0;
 }
 
 .profile-introduce {
   font-size: 0.9rem;
-  color: #ccc;
+  color: gray;
   margin-top: 0.5rem;
+}
+
+.dark-mode .profile-introduce {
+  color: #cccccc;
 }
 
 .profile-title {
   margin-block-start: 1.5rem;
-  margin-block-end: 0.5rem;
 }
 
 .contact-title {
   margin-block-start: 1.5rem;
   margin-block-end: 0rem;
   padding-top: 1rem;
+}
+
+.contact-links-box {
+  background-color: var(--box-bg-color);
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-radius: 8px;
+  align-content: center;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }

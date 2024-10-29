@@ -2,34 +2,36 @@
 
 import React, { useState, useEffect } from 'react';
 import TopNav from '../components/TopNav';
-import './styles/Global.css';
+import './styles/App.css';
 
 export default function RootLayout({ children }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('isDarkMode');
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const storedMode = localStorage.getItem('isDarkMode');
-      if (storedMode !== null) {
-        setIsDarkMode(storedMode === 'true');
-      }
-    }
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      // 브라우저 환경 확인
+    if (mounted) {
       localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
-      if (isDarkMode) {
-        document.body.classList.add('dark-mode');
-      } else {
-        document.body.classList.remove('dark-mode');
-      }
+      document.body.classList.toggle('dark-mode', isDarkMode);
     }
-  }, [isDarkMode]);
+  }, [isDarkMode, mounted]);
 
-  // 테마 토글 함수
-  const toggleTheme = () => setIsDarkMode((prevMode) => !prevMode);
+  const toggleTheme = () => {
+    setIsDarkMode((prevMode) => !prevMode);
+  };
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <html lang="ko">

@@ -174,3 +174,13 @@ body {
   margin-bottom: 10px;
   border-radius: 50%;
 }
+
+.terminal,
+.skill-card,
+.terminal-text,
+.command-line {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}

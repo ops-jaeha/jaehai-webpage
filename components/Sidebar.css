@@ -48,11 +48,12 @@
 
 .profile-title {
   margin-block-start: 1.5rem;
+  margin-block-end: 0.3rem;
 }
 
 .contact-title {
   margin-block-start: 1.5rem;
-  margin-block-end: 0rem;
+  margin-block-end: 0.3rem;
   padding-top: 1rem;
 }
 

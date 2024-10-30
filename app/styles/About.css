@@ -1,4 +1,4 @@
-.contact-page {
+.about-page {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -8,14 +8,14 @@
   color: var(--text-color);
 }
 
-.contact-container {
-  text-align: center;
-}
-
 .logo-section {
   margin-bottom: 1rem;
 }
 
-.contact-description {
+.about-container {
+  text-align: center;
+}
+
+.about-description {
   margin-bottom: 3rem;
 }

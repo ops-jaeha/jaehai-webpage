@@ -5,9 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import env from '../../../config/env.json';
 import '../../styles/App.css';
-import '../../styles/Contact.css';
+import '../../styles/About.css';
 
-const Contact = () => {
+const About = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // 다크 모드 상태 초기화 (로컬 스토리지에 저장된 값 확인)
@@ -29,8 +29,8 @@ const Contact = () => {
     'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png';
 
   return (
-    <div className="contact-page">
-      <div className="contact-container">
+    <div className="about-page">
+      <div className="about-container">
         <div className="logo-section">
           <Link href="/" className="brand-link">
             <span className="brand-text">
@@ -39,7 +39,7 @@ const Contact = () => {
           </Link>
         </div>
         <h1>Contact Me</h1>
-        <p className="contact-description">
+        <p className="about-description">
           Reach out to me on any of the following platforms:
         </p>
         <div className="contact-links">
@@ -94,4 +94,4 @@ const Contact = () => {
   );
 };
 
-export default Contact;
+export default About;

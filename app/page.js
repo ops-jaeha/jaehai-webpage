@@ -32,6 +32,11 @@ export default function Home() {
   return (
     <div className="container">
       <header className="header">
+        <img
+          src="https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/main-profile/image.webp"
+          alt="Profile"
+          className="main-profile-image"
+        />
         <h1 className="typing-effect">
           <span className="title">{env.user_name}</span>.Opslog
         </h1>

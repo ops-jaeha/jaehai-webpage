@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import TopNav from '../components/TopNav';
 import './styles/App.css';
 
-export default function RootLayout({ children }) {
+function RootLayout({ children }) {
   const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
   }
 
   return (
-    <html lang="ko">
+    <html>
       <body>
         <TopNav toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
         {children}
@@ -42,3 +42,5 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+export default RootLayout;

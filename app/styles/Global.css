@@ -16,16 +16,9 @@
   --terminal-green: #4fbc39;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   background-color: var(--primary);
   color: var(--text);
-  line-height: 1.6;
 }
 
 .container {

@@ -1,4 +1,3 @@
-// app/(dashboard)/layout.js
 'use client';
 
 import Sidebar from '../../components/Sidebar';

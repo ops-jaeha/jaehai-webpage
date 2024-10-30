@@ -1,5 +1,6 @@
 .navbar {
   background-color: var(--bg-color);
+  display: flex;
 }
 
 .navbar-container {
@@ -7,6 +8,7 @@
   margin: 0 auto;
   padding: 0 1rem;
   border-bottom: 1px solid var(--border-color);
+  width: 100%;
 }
 
 .navbar-content {

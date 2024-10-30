@@ -3,13 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import TopNav from '../components/TopNav';
 import './styles/App.css';
-import { Noto_Sans_KR } from 'next/font/google';
-
-const notoSansKR = Noto_Sans_KR({
-  subsets: ['korean'],
-  weight: ['400', '700'],
-  display: 'swap',
-});
 
 function RootLayout({ children }) {
   const [mounted, setMounted] = useState(false);
@@ -41,7 +34,7 @@ function RootLayout({ children }) {
   }
 
   return (
-    <html lang="ko" className={notoSansKR.className}>
+    <html lang="ko">
       <body>
         <TopNav toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
         {children}

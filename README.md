@@ -7,7 +7,7 @@
 ### 2. Clone the repository
 
 ```bash
-git clone https://github.com/ops-jaeha/Jaehai-Webpage.git
+git clone https://github.com/ops-jaeha/jaeha-webpage.git
 ```
 
 ### 3. Install dependencies

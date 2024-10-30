@@ -33,7 +33,7 @@ export default function Home() {
     <div className="container">
       <header className="header">
         <img
-          src="https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/main-profile/image.webp"
+          src={env.main_profile_image}
           alt="Profile"
           className="main-profile-image"
         />

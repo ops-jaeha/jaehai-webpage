@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import Sidebar from '../../components/Sidebar';
-import '../styles/App.css';
+import Sidebar from "../../components/Sidebar";
+import "../styles/App.css";
 
 export default function DashboardLayout({ children }) {
   return (

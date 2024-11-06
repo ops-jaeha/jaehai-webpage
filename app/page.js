@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import './styles/Global.css';
-import env from '../config/env.json';
+import { useEffect } from "react";
+import "./styles/Global.css";
+import env from "../config/env.json";
 
 export default function Home() {
   useEffect(() => {
     const typeWriter = (element, text, speed = 50) => {
       let i = 0;
-      element.innerHTML = '';
+      element.innerHTML = "";
       function type() {
         if (i < text.length) {
           element.innerHTML += text.charAt(i);
@@ -19,11 +19,11 @@ export default function Home() {
       type();
     };
 
-    const commandLines = document.querySelectorAll('.command-line');
+    const commandLines = document.querySelectorAll(".command-line");
     commandLines.forEach((line) => {
       typeWriter(line, line.textContent);
     });
-    const terminalTexts = document.querySelectorAll('.terminal-text');
+    const terminalTexts = document.querySelectorAll(".terminal-text");
     terminalTexts.forEach((text) => {
       typeWriter(text, text.textContent, 15);
     });

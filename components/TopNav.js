@@ -1,9 +1,9 @@
-import React from 'react';
-import Link from 'next/link';
-import env from '../config/env.json';
-import './TopNav.css';
-import SunIcon from '../public/assets/background/SunIcon';
-import MoonIcon from '../public/assets/background/MoonIcon';
+import React from "react";
+import Link from "next/link";
+import env from "../config/env.json";
+import "./TopNav.css";
+import SunIcon from "../public/assets/background/SunIcon";
+import MoonIcon from "../public/assets/background/MoonIcon";
 
 const TopNav = ({ toggleTheme, isDarkMode }) => {
   return (
@@ -22,8 +22,11 @@ const TopNav = ({ toggleTheme, isDarkMode }) => {
               <Link href="/post" className="menu-link">
                 Post
               </Link>
-              <Link href="/about" className="menu-link">
-                About
+              <Link href="/portfolio" className="menu-link">
+                Portfolio
+              </Link>
+              <Link href="/contact" className="menu-link">
+                Contact
               </Link>
               <button className="theme-toggle" onClick={toggleTheme}>
                 {isDarkMode ? <SunIcon /> : <MoonIcon />}

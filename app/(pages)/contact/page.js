@@ -1,32 +1,31 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import env from '../../../config/env.json';
-import '../../styles/App.css';
-import '../../styles/About.css';
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import env from "../../../config/env.json";
+import "../../styles/App.css";
+import "../../styles/Contact.css";
 
 const About = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // 다크 모드 상태 초기화 (로컬 스토리지에 저장된 값 확인)
   useEffect(() => {
-    const storedMode = JSON.parse(localStorage.getItem('isDarkMode'));
+    const storedMode = JSON.parse(localStorage.getItem("isDarkMode"));
     if (storedMode !== null) {
       setIsDarkMode(storedMode);
     }
   }, []);
 
   const githubLogoSrc = isDarkMode
-    ? 'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png'
-    : 'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png';
+    ? "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png"
+    : "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png";
 
   const linkedinLogoSrc =
-    'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/linkedin/linkedin-mark.png';
+    "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/linkedin/linkedin-mark.png";
 
   const emailLogoSrc =
-    'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png';
+    "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png";
 
   return (
     <div className="about-page">

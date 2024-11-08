@@ -22,8 +22,8 @@ const TopNav = ({ toggleTheme, isDarkMode }) => {
               <Link href="/post" className="menu-link">
                 Post
               </Link>
-              <Link href="/portfolio" className="menu-link">
-                Portfolio
+              <Link href="/resume" className="menu-link">
+                Resume
               </Link>
               <Link href="/contact" className="menu-link">
                 Contact

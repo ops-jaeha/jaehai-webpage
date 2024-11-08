@@ -1,52 +1,25 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
-import TopNav from "../components/TopNav";
+import ClientLayout from "./ClientLayout";
 import "./styles/App.css";
+import env from "../config/env.json";
 
-function RootLayout({ children }) {
-  const [mounted, setMounted] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("isDarkMode");
-      return saved ? JSON.parse(saved) : true;
-    }
-    return false;
-  });
+export const metadata = {
+  title: `${env.title}`,
+  description: `${env.description}`,
+};
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
-      document.body.classList.toggle("dark-mode", isDarkMode);
-    }
-  }, [isDarkMode, mounted]);
-
-  const toggleTheme = () => {
-    setIsDarkMode((prevMode) => !prevMode);
-  };
-
-  if (!mounted) {
-    return null;
-  }
-
+export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body
         style={{
           paddingRight: "0px",
           margin: "0",
-          overflow: "hidden",
+          overflowX: "revert",
+          overflowY: "scroll",
         }}
       >
-        <TopNav toggleTheme={toggleTheme} isDarkMode={isDarkMode} />
-        {children}
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
 }
-
-export default RootLayout;

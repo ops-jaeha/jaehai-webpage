@@ -3,6 +3,7 @@
   --text-color: #000000;
   --border-color: #dddddd;
   --box-bg-color: #f0f0f0;
+  font-size: clamp(0.1rem, 2.5vw, 1rem);
 }
 
 .dark-mode {
@@ -63,5 +64,7 @@ body {
 }
 
 .contact-logo {
+  width: clamp(0.1rem, 2vw, 15px);
+  height: clamp(0.1rem, 2vw, 15px);
   margin-right: 0.5rem;
 }

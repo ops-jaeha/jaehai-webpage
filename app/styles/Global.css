@@ -5,6 +5,10 @@
   --text: #020711;
   --success: #566c42;
   --terminal-green: #2b6c1e;
+  --profile-image-size: clamp(0.1rem, 15vw, 120px);
+  --terminal-button-size: clamp(0.1rem, 1.5vw, 12px);
+  --terminal-header-gap: clamp(0.1rem, 1.5vw, 8px);
+  --terminal-header-margin: clamp(0.1rem, 1vw, 15px);
 }
 
 .dark-mode {
@@ -36,7 +40,7 @@ body {
 }
 
 .typing-effect {
-  overflow: hidden;
+  overflow-x: hidden;
   white-space: nowrap;
   padding-right: 0.5rem;
   border-right: 3px solid var(--accent);
@@ -82,13 +86,13 @@ body {
 
 .terminal-header {
   display: flex;
-  gap: 8px;
-  margin-bottom: 15px;
+  gap: var(--terminal-header-gap);
+  margin-bottom: var(--terminal-header-margin);
 }
 
 .terminal-button {
-  width: 12px;
-  height: 12px;
+  width: var(--terminal-button-size);
+  height: var(--terminal-button-size);
   border-radius: 50%;
   background: #ff5f56;
 }
@@ -184,8 +188,10 @@ body {
 }
 
 .main-profile-image {
-  width: 120px;
-  height: 120px;
+  /* width: 120px;
+  height: 120px; */
+  width: var(--profile-image-size);
+  height: var(--profile-image-size);
   margin-right: 10px;
   margin-bottom: 10px;
   border-radius: 50%;

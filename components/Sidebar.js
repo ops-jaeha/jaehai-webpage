@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import env from '../config/env.json';
-import '../app/styles/App.css';
-import './Sidebar.css';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import env from "../config/env.json";
+import "../app/styles/App.css";
+import "./Sidebar.css";
 
 const Sidebar = () => {
-  const [profileImage, setProfileImage] = useState('');
+  const [profileImage, setProfileImage] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -20,22 +20,22 @@ const Sidebar = () => {
   }, []);
 
   useEffect(() => {
-    const storedMode = JSON.parse(localStorage.getItem('isDarkMode'));
+    const storedMode = JSON.parse(localStorage.getItem("isDarkMode"));
     if (storedMode !== null) {
       setIsDarkMode(storedMode);
     }
   }, []);
 
   const githubLogoSrc = isDarkMode
-    ? 'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png'
-    : 'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png';
+    ? "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png"
+    : "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png";
 
   // LinkedIn 로고 URL
   const linkedinLogoSrc =
-    'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/linkedin/linkedin-mark.png';
+    "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/linkedin/linkedin-mark.png";
 
   const emailLogoSrc =
-    'https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png';
+    "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png";
 
   return (
     <div className="sidebar">

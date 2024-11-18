@@ -4,8 +4,13 @@ import * as React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { NotionRenderer } from "react-notion-x";
+import { ExtendedRecordMap } from "notion-types";
 
-export default function ResumeRenderer({ recordMap }: any) {
+interface ResumeRendererProps {
+  recordMap: ExtendedRecordMap;
+}
+
+export default function ResumeRenderer({ recordMap }: ResumeRendererProps) {
   const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 

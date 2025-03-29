@@ -22,7 +22,6 @@ export default function NotionPage({ recordMap }: RendererProps) {
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
       document.body.classList.toggle("dark-mode", isDarkMode);
     }
   }, [isDarkMode, mounted]);

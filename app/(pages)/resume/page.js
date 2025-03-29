@@ -3,6 +3,7 @@ import { NotionAPI } from "notion-client";
 import env from "@/config/env.json";
 import NotionPage from "@/components/NotionPage";
 import "@/app/styles/Resume.css";
+import "react-notion-x/src/styles.css";
 
 const notion = new NotionAPI();
 

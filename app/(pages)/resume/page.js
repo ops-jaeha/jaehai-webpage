@@ -1,7 +1,7 @@
 import React from "react";
 import { NotionAPI } from "notion-client";
 import env from "@/config/env.json";
-import ResumeRenderer from "@/components/ResumeRenderer";
+import NotionPage from "@/components/NotionPage";
 import "@/app/styles/Resume.css";
 
 const notion = new NotionAPI();
@@ -12,7 +12,7 @@ const Resume = async () => {
   return (
     <div className="resume-page">
       <div className="resume-container">
-        <ResumeRenderer recordMap={recordMap} />
+        <NotionPage recordMap={recordMap} />
       </div>
     </div>
   );

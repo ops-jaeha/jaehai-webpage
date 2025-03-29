@@ -6,11 +6,11 @@ import { useState } from "react";
 import { NotionRenderer } from "react-notion-x";
 import { ExtendedRecordMap } from "notion-types";
 
-interface ResumeRendererProps {
+interface RendererProps {
   recordMap: ExtendedRecordMap;
 }
 
-export default function ResumeRenderer({ recordMap }: ResumeRendererProps) {
+export default function NotionPage({ recordMap }: RendererProps) {
   const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -26,6 +26,7 @@ export default function ResumeRenderer({ recordMap }: ResumeRendererProps) {
       document.body.classList.toggle("dark-mode", isDarkMode);
     }
   }, [isDarkMode, mounted]);
+
   return (
     <NotionRenderer
       recordMap={recordMap}

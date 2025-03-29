@@ -25,6 +25,7 @@ body {
 .app-container {
   display: flex;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
 }
 
@@ -34,6 +35,16 @@ body {
   padding-top: 1rem;
   padding-left: 1rem;
   padding-right: 1rem;
+}
+
+.resume-page {
+  max-width: 100%;
+  width: 100%;
+}
+
+.resume-container {
+  max-width: 100%;
+  width: 100%;
 }
 
 .brand-link,

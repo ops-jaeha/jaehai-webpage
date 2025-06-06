@@ -5,12 +5,14 @@ import TopNav from "../components/TopNav";
 
 function ClientLayout({ children }) {
   const [mounted, setMounted] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
     setMounted(true);
     const saved = localStorage.getItem("isDarkMode");
-    setIsDarkMode(saved ? JSON.parse(saved) : true);
+    const initialDarkMode = saved ? JSON.parse(saved) : true;
+    setIsDarkMode(initialDarkMode);
+    document.body.classList.toggle("dark-mode", initialDarkMode);
   }, []);
 
   useEffect(() => {

@@ -7,27 +7,18 @@ import "react-notion-x/src/styles.css";
 
 interface RendererProps {
   recordMap: ExtendedRecordMap;
+  isDarkMode: boolean;
 }
 
-export default function ResumeNotionPage({ recordMap }: RendererProps) {
+export default function ResumeNotionPage({
+  recordMap,
+  isDarkMode,
+}: RendererProps) {
   const [mounted, setMounted] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("isDarkMode");
-    const initialDarkMode = saved ? JSON.parse(saved) : true;
-    setIsDarkMode(initialDarkMode);
-    document.body.classList.toggle("dark-mode", initialDarkMode);
-
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem("isDarkMode", JSON.stringify(isDarkMode));
-      document.body.classList.toggle("dark-mode", isDarkMode);
-    }
-  }, [isDarkMode, mounted]);
 
   if (!mounted) return null;
 

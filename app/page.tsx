@@ -6,7 +6,7 @@ import env from "../config/env.json";
 
 export default function Home() {
   useEffect(() => {
-    const typeWriter = (element, text, speed = 50) => {
+    const typeWriter = (element: HTMLElement, text: string, speed = 50) => {
       let i = 0;
       element.innerHTML = "";
       function type() {
@@ -21,11 +21,11 @@ export default function Home() {
 
     const commandLines = document.querySelectorAll(".command-line");
     commandLines.forEach((line) => {
-      typeWriter(line, line.textContent);
+      typeWriter(line as HTMLElement, line.textContent || "");
     });
     const terminalTexts = document.querySelectorAll(".terminal-text");
     terminalTexts.forEach((text) => {
-      typeWriter(text, text.textContent, 15);
+      typeWriter(text as HTMLElement, text.textContent || "", 15);
     });
   }, []);
 

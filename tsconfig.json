@@ -27,9 +27,10 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next/types/app/post/page.js",
-    "app/(pages)/contact/page.js",
-    "app/(pages)/post/page.js"
+    "app/(pages)/contact/page.tsx",
+    "app/(pages)/post/page.tsx",
+    "app/(pages)/resume/page.tsx",
+    "app/ClientLayout.js"
   ],
   "exclude": ["node_modules"]
 }

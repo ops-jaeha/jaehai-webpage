@@ -5,7 +5,13 @@ import "./TopNav.css";
 import SunIcon from "../public/assets/background/SunIcon";
 import MoonIcon from "../public/assets/background/MoonIcon";
 
-const TopNav = ({ toggleTheme, isDarkMode }) => {
+const TopNav = ({
+  toggleTheme,
+  isDarkMode,
+}: {
+  toggleTheme: () => void;
+  isDarkMode: boolean;
+}) => {
   return (
     <nav className="navbar">
       <div className="navbar-container">

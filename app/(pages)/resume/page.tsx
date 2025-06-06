@@ -1,9 +1,6 @@
-import React from "react";
 import { NotionAPI } from "notion-client";
 import env from "@/config/env.json";
-import NotionPage from "@/components/NotionPage";
-import "@/app/styles/Resume.css";
-import "react-notion-x/src/styles.css";
+import ResumeWrapper from "@/components/ResumeNotionPage";
 
 const notion = new NotionAPI();
 
@@ -13,7 +10,7 @@ const Resume = async () => {
   return (
     <div className="resume-page">
       <div className="resume-container">
-        <NotionPage recordMap={recordMap} />
+        <ResumeWrapper recordMap={recordMap} />
       </div>
     </div>
   );

@@ -1,13 +1,18 @@
 import ClientLayout from "./ClientLayout";
 import "./styles/App.css";
+import "./styles/Global.css";
 import env from "../config/env.json";
 
 export const metadata = {
   title: `${env.title}`,
-  description: `${env.description}`,
+  description: `${env["env.description"]}`,
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="ko">
       <body

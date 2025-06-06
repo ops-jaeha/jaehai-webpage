@@ -1,26 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
-import env from "../config/env.json";
-import "../app/styles/App.css";
-import "./Sidebar.css";
+import Image from "next/image";
+import env from "../../../config/env.json";
+import "../../styles/App.css";
+import "../../styles/Contact.css";
 
-const Sidebar = () => {
-  const [profileImage, setProfileImage] = useState("");
+const About = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    fetch(`https://api.github.com/users/${env.github_id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setProfileImage(data.avatar_url);
-      });
-  }, []);
-
-  useEffect(() => {
-    const storedMode = JSON.parse(localStorage.getItem("isDarkMode"));
+    const storedMode = JSON.parse(
+      localStorage.getItem("isDarkMode") || "false"
+    );
     if (storedMode !== null) {
       setIsDarkMode(storedMode);
     }
@@ -30,7 +23,6 @@ const Sidebar = () => {
     ? "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png"
     : "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png";
 
-  // LinkedIn 로고 URL
   const linkedinLogoSrc =
     "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/linkedin/linkedin-mark.png";
 
@@ -38,31 +30,25 @@ const Sidebar = () => {
     "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png";
 
   return (
-    <div className="sidebar">
-      <h2 className="profile-title">💻 Profile</h2>
-      <div className="profile-card">
-        {profileImage && (
-          <Image
-            src={profileImage}
-            alt="Profile"
-            width={100}
-            height={100}
-            className="profile-image"
-          />
-        )}
-        <h3 className="profile-name">{env.user_name}</h3>
-        <p className="profile-role">{env.role}</p>
-        <p className="profile-introduce">{env.introduce_sidebar}</p>
-      </div>
-
-      <h3 className="contact-title">💬 Contact</h3>
-      <div className="contact-links-box">
+    <div className="about-page">
+      <div className="about-container">
+        <div className="logo-section">
+          <Link href="/" className="brand-link">
+            <span className="brand-text">
+              <strong>{env.user_name}</strong>.Opslog
+            </span>
+          </Link>
+        </div>
+        <h1>Contact Me</h1>
+        <p className="about-description">
+          Reach out to me on any of the following platforms:
+        </p>
         <div className="contact-links">
           <Link
             href={`https://github.com/${env.github_id}`}
+            className="contact-link"
             target="_blank"
             rel="noopener noreferrer"
-            className="contact-link"
           >
             <Image
               src={githubLogoSrc}
@@ -75,9 +61,9 @@ const Sidebar = () => {
           </Link>
           <Link
             href={`https://www.linkedin.com/in/${env.linkedin_id}`}
+            className="contact-link"
             target="_blank"
             rel="noopener noreferrer"
-            className="contact-link"
           >
             <Image
               src={linkedinLogoSrc}
@@ -88,7 +74,12 @@ const Sidebar = () => {
             />
             LinkedIn
           </Link>
-          <Link href={`mailto:${env.email}`} className="contact-link">
+          <Link
+            href={`mailto:${env.email}`}
+            className="contact-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
               src={emailLogoSrc}
               alt="Email"
@@ -104,4 +95,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default About;

@@ -3,7 +3,11 @@
 import Sidebar from "../../components/Sidebar";
 import "../styles/App.css";
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="app-container">
       <Sidebar />

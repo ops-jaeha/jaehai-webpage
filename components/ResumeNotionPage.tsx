@@ -7,13 +7,9 @@ import "react-notion-x/src/styles.css";
 
 interface RendererProps {
   recordMap: ExtendedRecordMap;
-  isDarkMode: boolean;
 }
 
-export default function ResumeNotionPage({
-  recordMap,
-  isDarkMode,
-}: RendererProps) {
+export default function ResumeNotionPage({ recordMap }: RendererProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -26,7 +22,6 @@ export default function ResumeNotionPage({
     <NotionRenderer
       recordMap={recordMap}
       fullPage={true}
-      darkMode={isDarkMode}
       disableHeader={true}
     />
   );

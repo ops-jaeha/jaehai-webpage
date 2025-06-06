@@ -10,7 +10,7 @@ const Resume = async () => {
   return (
     <div className="resume-page">
       <div className="resume-container">
-        <ResumeWrapper recordMap={recordMap} />
+        <ResumeWrapper recordMap={recordMap as any} />
       </div>
     </div>
   );

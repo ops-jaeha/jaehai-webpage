@@ -1,23 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import env from "../../../config/env.json";
 import "../../styles/App.css";
 import "../../styles/Contact.css";
+import { useDarkMode } from "../../../components/DarkModeContext";
 
 const About = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    const storedMode = JSON.parse(
-      localStorage.getItem("isDarkMode") || "false"
-    );
-    if (storedMode !== null) {
-      setIsDarkMode(storedMode);
-    }
-  }, []);
+  const { isDarkMode } = useDarkMode();
 
   const githubLogoSrc = isDarkMode
     ? "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png"

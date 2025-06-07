@@ -6,10 +6,11 @@ import Link from "next/link";
 import env from "../config/env.json";
 import "../app/styles/App.css";
 import "./Sidebar.css";
+import { useDarkMode } from "./DarkModeContext";
 
 const Sidebar = () => {
   const [profileImage, setProfileImage] = useState("");
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode } = useDarkMode();
 
   useEffect(() => {
     fetch(`https://api.github.com/users/${env.github_id}`)
@@ -17,15 +18,6 @@ const Sidebar = () => {
       .then((data) => {
         setProfileImage(data.avatar_url);
       });
-  }, []);
-
-  useEffect(() => {
-    const storedMode = JSON.parse(
-      localStorage.getItem("isDarkMode") || "false"
-    );
-    if (storedMode !== null) {
-      setIsDarkMode(storedMode);
-    }
   }, []);
 
   const githubLogoSrc = isDarkMode

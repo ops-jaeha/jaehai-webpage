@@ -4,14 +4,11 @@ import env from "../config/env.json";
 import "./TopNav.css";
 import SunIcon from "../public/assets/background/SunIcon";
 import MoonIcon from "../public/assets/background/MoonIcon";
+import { useDarkMode } from "./DarkModeContext";
 
-const TopNav = ({
-  toggleTheme,
-  isDarkMode,
-}: {
-  toggleTheme: () => void;
-  isDarkMode: boolean;
-}) => {
+const TopNav = () => {
+  const { isDarkMode, toggleTheme } = useDarkMode();
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -25,8 +22,8 @@ const TopNav = ({
           </div>
           <div className="navbar-menu">
             <div className="menu-items">
-              <Link href="/post" className="menu-link">
-                Post
+              <Link href="/posts" className="menu-link">
+                Posts
               </Link>
               <Link href="/resume" className="menu-link">
                 Resume

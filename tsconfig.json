@@ -28,7 +28,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/(pages)/contact/page.tsx",
-    "app/(pages)/post/page.tsx",
+    "app/(pages)/posts/page.tsx",
     "app/(pages)/resume/page.tsx",
     "app/ClientLayout.js"
   ],

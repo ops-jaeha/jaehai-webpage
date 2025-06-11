@@ -1,7 +1,7 @@
 ---
 name: Etc.
 about: Other inquiries
-title: '[etc.] '
+title: "[etc.] "
 labels: help wanted
 assignees: ops-jaeha
 ---

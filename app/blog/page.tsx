@@ -1,0 +1,55 @@
+import ProfileSection from '@/app/_components/ProfileSection';
+import { getTags, getPublishedPosts } from '@/lib/notion';
+import HeaderSection from '@/app/_components/HeaderSection';
+import PostListSuspense from '@/components/features/blog/PostListSuspense';
+import { Suspense } from 'react';
+import TagSectionClient from '@/app/_components/TagSection.client';
+import PostListSkeleton from '@/components/features/blog/PostListSkeleton';
+import TagSectionSkeleton from '@/app/_components/TagSectionSkeleton';
+import { Metadata } from 'next';
+import env from '@/config/env.json';
+
+interface BlogProps {
+  searchParams: Promise<{ tag?: string; sort?: string }>;
+}
+
+export const metadata: Metadata = {
+  title: env.title,
+  description: env.introduce_sidebar,
+  alternates: {
+    canonical: '/blog',
+  },
+};
+
+export default async function Blog({ searchParams }: BlogProps) {
+  const { tag, sort } = await searchParams;
+  const selectedTag = tag || '전체';
+  const selectedSort = sort || 'latest';
+
+  const tags = getTags();
+  const postsPromise = getPublishedPosts({ tag: selectedTag, sort: selectedSort });
+  return (
+    <div className="container mx-auto py-8">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr_220px]">
+        {/* 좌측 사이드바 */}
+        <aside className="order-2 md:order-none">
+          <ProfileSection />
+        </aside>
+        <div className="order-3 space-y-8 md:order-none">
+          {/* 섹션 제목 */}
+          <HeaderSection selectedTag={selectedTag} />
+          {/* 블로그 카드 그리드 */}
+          <Suspense fallback={<PostListSkeleton />}>
+            <PostListSuspense postsPromise={postsPromise} />
+          </Suspense>
+        </div>
+        {/* 우측 사이드바 */}
+        <aside className="order-1 flex flex-col gap-6 md:order-none">
+          <Suspense fallback={<TagSectionSkeleton />}>
+            <TagSectionClient tags={tags} selectedTag={selectedTag} />
+          </Suspense>
+        </aside>
+      </div>
+    </div>
+  );
+}

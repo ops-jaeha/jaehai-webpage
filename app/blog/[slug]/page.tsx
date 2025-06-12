@@ -111,12 +111,12 @@ export default async function BlogPost({ params }: BlogPostProps) {
   });
 
   return (
-    <div className="container py-6 md:py-8 lg:py-12">
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-[240px_1fr_220px] md:gap-8">
-        <aside className="space-y-4">
+    <div className="container mx-auto py-8">
+      <div className="grid gap-6 md:grid-cols-[240px_minmax(0,calc(72rem-460px))_220px]">
+        <aside className="order-2 md:order-none">
           <ProfileSection />
         </aside>
-        <section>
+        <section className="order-3 space-y-8 md:order-none">
           {/* 블로그 헤더 */}
           <div className="space-y-4">
             <div className="space-y-2">
@@ -169,7 +169,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
           {/* 이전/다음 포스트 네비게이션 */}
           {/* <GiscusComments /> */}
         </section>
-        <aside className="relative hidden md:block">
+        <aside className="order-1 flex flex-col gap-6 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">
             <div className="bg-muted/60 space-y-4 rounded-lg p-6 backdrop-blur-sm">
               <h3 className="text-lg font-semibold">목차</h3>

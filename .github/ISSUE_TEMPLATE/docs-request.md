@@ -1,7 +1,7 @@
 ---
 name: Docs request
 about: Propose a document on this project
-title: '[Docs] '
+title: "[Docs] "
 labels: documentation
 assignees: ops-jaeha
 ---

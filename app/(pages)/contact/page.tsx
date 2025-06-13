@@ -1,89 +1,47 @@
-"use client";
+import { Metadata } from 'next';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ContactLinksClient } from '@/app/_components/client/ContactLinksClient';
+import env from '@/config/env.json';
+import ProfileSection from '@/app/_components/ProfileSection';
 
-import Link from "next/link";
-import Image from "next/image";
-import env from "../../../config/env.json";
-import "../../styles/App.css";
-import "../../styles/Contact.css";
-import { useDarkMode } from "../../../components/DarkModeContext";
+export const metadata: Metadata = {
+  title: `Contact - ${env.title}`,
+  description: `${env.user_name}에게 연락하기`,
+  alternates: {
+    canonical: '/contact',
+  },
+  openGraph: {
+    title: `Contact - ${env.title}`,
+    description: `${env.user_name}에게 연락하기`,
+    url: '/contact',
+    type: 'website',
+  },
+};
 
-const About = () => {
-  const { isDarkMode } = useDarkMode();
-
-  const githubLogoSrc = isDarkMode
-    ? "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark-white.png"
-    : "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/refs/heads/main/public/assets/github/github-mark.png";
-
-  const linkedinLogoSrc =
-    "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/linkedin/linkedin-mark.png";
-
-  const emailLogoSrc =
-    "https://raw.githubusercontent.com/ops-jaeha/jaehai-webpage/main/public/assets/email/gmail.png";
-
+export default function ContactPage() {
   return (
-    <div className="about-page">
-      <div className="about-container">
-        <div className="logo-section">
-          <Link href="/" className="brand-link">
-            <span className="brand-text">
-              <strong>{env.user_name}</strong>.Opslog
-            </span>
-          </Link>
-        </div>
-        <h1>Contact Me</h1>
-        <p className="about-description">
-          Reach out to me on any of the following platforms:
-        </p>
-        <div className="contact-links">
-          <Link
-            href={`https://github.com/${env.github_id}`}
-            className="contact-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={githubLogoSrc}
-              alt="GitHub"
-              width={15}
-              height={15}
-              className="contact-logo"
-            />
-            GitHub
-          </Link>
-          <Link
-            href={`https://www.linkedin.com/in/${env.linkedin_id}`}
-            className="contact-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={linkedinLogoSrc}
-              alt="LinkedIn"
-              width={15}
-              height={15}
-              className="contact-logo"
-            />
-            LinkedIn
-          </Link>
-          <Link
-            href={`mailto:${env.email}`}
-            className="contact-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              src={emailLogoSrc}
-              alt="Email"
-              width={15}
-              height={15}
-              className="contact-logo"
-            />
-            Email
-          </Link>
+    <div className="container mx-auto flex max-w-lg items-start py-8">
+      <div className="grid gap-6 md:grid-cols-[240px_minmax(0,calc(72rem-240px))]">
+        <aside className="order-2 md:order-none">
+          <div className="sticky top-[var(--sticky-top)]">
+            <ProfileSection />
+          </div>
+        </aside>
+        <div className="order-3 space-y-8 md:order-none">
+          <Card className="w-full">
+            <CardHeader className="text-center">
+              <CardTitle className="py-2">{env.title}</CardTitle>
+              <CardTitle className="py-2 text-3xl font-bold">Contact Me</CardTitle>
+              <CardDescription className="py-2">
+                궁금한 점이 있으시면 아래 플랫폼으로 편하게 연락주세요.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ContactLinksClient />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
   );
-};
-
-export default About;
+}

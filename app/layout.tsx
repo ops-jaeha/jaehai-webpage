@@ -1,29 +1,32 @@
-import ClientLayout from "./ClientLayout";
-import "./styles/App.css";
-import "./styles/Global.css";
-import env from "../config/env.json";
+import type { Metadata } from 'next';
+import './globals.css';
 
-export const metadata = {
-  title: `${env.title}`,
-  description: `${env["env.description"]}`,
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { ReactQueryProvider } from '@/app/providers';
+import Header from '@/components/layouts/Header';
+import Footer from '@/components/layouts/Footer';
+
+export const metadata: Metadata = {
+  title: 'Jaehai Opslog',
+  description: 'Jaehai Blog & Resume',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
-      <body
-        style={{
-          paddingRight: "0px",
-          margin: "0",
-          overflowX: "revert",
-          overflowY: "scroll",
-        }}
-      >
-        <ClientLayout>{children}</ClientLayout>
+    <html lang="ko" suppressHydrationWarning>
+      <body className="antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          <main>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

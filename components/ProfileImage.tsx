@@ -1,13 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import * as React from 'react';
 import env from '@/config/env.json';
 
 export function ProfileImage() {
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = React.useState<string | null>(null);
+  const [mounted, setMounted] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    setMounted(true);
+
     fetch(`https://api.github.com/users/${env.social_links[0].github_id}`)
       .then((response) => {
         if (!response.ok) {
@@ -27,8 +30,12 @@ export function ProfileImage() {
       });
   }, []);
 
+  if (!mounted) {
+    return <div className="bg-muted-foreground/20 h-36 w-36 animate-pulse rounded-full"></div>;
+  }
+
   if (!profileImage) {
-    return null;
+    return <div className="bg-muted-foreground/20 h-36 w-36 animate-pulse rounded-full"></div>;
   }
 
   return (

@@ -22,7 +22,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           disableTransitionOnChange
         >
           <Header />
-          <ReactQueryProvider>{children}</ReactQueryProvider>
+          <main>
+            <ReactQueryProvider>{children}</ReactQueryProvider>
+          </main>
           <Footer />
         </ThemeProvider>
       </body>

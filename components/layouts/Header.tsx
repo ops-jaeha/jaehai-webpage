@@ -5,7 +5,7 @@ import { ThemeToggle } from '@/components/theme/ThemeToggle';
 
 export default function Header() {
   return (
-    <header className="bg-background sticky top-0 z-50 mb-6 border-b">
+    <header className="bg-background sticky top-0 z-50 border-b">
       <div className="container mx-auto flex h-[var(--header-height)] max-w-[1000px] items-center px-4 py-2">
         <div className="grid w-full grid-cols-2 items-center">
           <div className="flex items-center justify-start">

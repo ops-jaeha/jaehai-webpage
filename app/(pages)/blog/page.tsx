@@ -8,6 +8,7 @@ import PostListSkeleton from '@/components/features/blog/PostListSkeleton';
 import TagSectionSkeleton from '@/app/_components/TagSectionSkeleton';
 import { Metadata } from 'next';
 import env from '@/config/env.json';
+import { Separator } from '@/components/ui/separator';
 
 interface BlogProps {
   searchParams: Promise<{ tag?: string; sort?: string }>;
@@ -32,12 +33,15 @@ export default async function Blog({ searchParams }: BlogProps) {
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr_220px]">
         {/* 좌측 사이드바 */}
-        <aside className="order-2 md:order-none">
-          <ProfileSection />
+        <aside>
+          <div className="sticky top-[var(--sticky-top)]">
+            <ProfileSection />
+          </div>
         </aside>
         <div className="order-3 space-y-8 md:order-none">
           {/* 섹션 제목 */}
           <HeaderSection selectedTag={selectedTag} />
+          <Separator className="my-4" />
           {/* 블로그 카드 그리드 */}
           <Suspense fallback={<PostListSkeleton />}>
             <PostListSuspense postsPromise={postsPromise} />
@@ -45,9 +49,11 @@ export default async function Blog({ searchParams }: BlogProps) {
         </div>
         {/* 우측 사이드바 */}
         <aside className="order-1 flex flex-col gap-6 md:order-none">
-          <Suspense fallback={<TagSectionSkeleton />}>
-            <TagSectionClient tags={tags} selectedTag={selectedTag} />
-          </Suspense>
+          <div className="sticky top-[var(--sticky-top)]">
+            <Suspense fallback={<TagSectionSkeleton />}>
+              <TagSectionClient tags={tags} selectedTag={selectedTag} />
+            </Suspense>
+          </div>
         </aside>
       </div>
     </div>

@@ -31,7 +31,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container mx-auto max-w-4xl space-y-4 p-6">
+    <div className="container mx-auto space-y-8 py-8">
       {/* Header Section */}
       <header className="flex flex-col items-center space-y-4">
         <Image
@@ -40,14 +40,14 @@ export default function Home() {
           width={128}
           height={128}
           className="rounded-full object-cover shadow-lg"
+          priority
         />
 
         <h1 className="py-4 text-4xl tracking-tight">
-          <span className="text-primary font-bold">{env.user_name}</span>
-          <span className="text-muted-foreground font-normal">.Opslog</span>
+          <span className="text-primary font-bold">{env.main_title}</span>
+          <span className="text-muted-foreground font-normal">.{env.main_sub_title}</span>
         </h1>
       </header>
-
       {/* Terminal Section */}
       <section className="space-y-4 rounded-xl bg-[#d5d5d5] p-6 text-green-800 shadow transition-colors duration-300 dark:bg-[#333] dark:text-emerald-200">
         <div className="mb-5 flex space-x-2">
@@ -60,7 +60,6 @@ export default function Home() {
         <div className="command-line">$ ls skills/</div>
         <p className="terminal-text text-black dark:text-white">{env.skill_text}</p>
       </section>
-
       {/* Skills Section */}
       <section className="pysm:grid-cols-2 grid grid-cols-1 gap-4 md:grid-cols-3">
         {env.skills.map((skill, index) => (

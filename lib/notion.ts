@@ -1,14 +1,18 @@
 import { Client } from '@notionhq/client';
 import type { Post, TagFilterItem } from '@/types/blog';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import { NotionToMarkdown } from 'notion-to-md';
+import { NotionAPI } from 'notion-client';
 import { unstable_cache } from 'next/cache';
 import env from '@/config/env.json';
+import type { ExtendedRecordMap } from 'notion-types';
 
 export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
-const n2m = new NotionToMarkdown({ notionClient: notion });
+
+export const notionX = new NotionAPI({
+  authToken: process.env.NOTION_TOKEN,
+});
 
 function getPostMetadata(page: PageObjectResponse): Post {
   const { properties } = page;
@@ -45,10 +49,11 @@ function getPostMetadata(page: PageObjectResponse): Post {
   };
 }
 
+// getPostBySlug 함수를 RecordMap을 반환하도록 수정
 export const getPostBySlug = async (
   slug: string
 ): Promise<{
-  markdown: string;
+  recordMap: ExtendedRecordMap | null;
   post: Post | null;
 }> => {
   const response = await notion.databases.query({
@@ -71,21 +76,25 @@ export const getPostBySlug = async (
     },
   });
 
-  if (!response.results[0]) {
+  const page = response.results[0] as PageObjectResponse | undefined;
+
+  if (!page) {
     return {
-      markdown: '',
+      recordMap: null,
       post: null,
     };
   }
 
-  const mdBlocks = await n2m.pageToMarkdown(response.results[0].id);
-  const { parent } = n2m.toMarkdownString(mdBlocks);
+  // notion-client를 사용해 페이지의 전체 콘텐츠(RecordMap)를 가져옵니다.
+  const recordMap = await notionX.getPage(page.id);
 
   return {
-    markdown: parent,
-    post: getPostMetadata(response.results[0] as PageObjectResponse),
+    recordMap,
+    post: getPostMetadata(page),
   };
 };
+
+// --- 아래 코드는 기존 코드와 동일합니다 ---
 
 export interface GetPublishedPostsParams {
   tag?: string;
@@ -114,6 +123,12 @@ export const getPublishedPosts = unstable_cache(
             property: 'status',
             select: {
               equals: 'Public',
+            },
+          },
+          {
+            property: 'type',
+            select: {
+              equals: 'Post',
             },
           },
           ...(tag && tag !== '전체'
@@ -157,7 +172,6 @@ export const getPublishedPosts = unstable_cache(
 export const getTags = async (): Promise<TagFilterItem[]> => {
   const { posts } = await getPublishedPosts({ pageSize: 100 });
 
-  // 모든 태그를 추출하고 각 태그의 출현 횟수를 계산
   const tagCount = posts.reduce(
     (acc, post) => {
       post.tags?.forEach((tag) => {
@@ -168,21 +182,18 @@ export const getTags = async (): Promise<TagFilterItem[]> => {
     {} as Record<string, number>
   );
 
-  // TagFilterItem 형식으로 변환
   const tags: TagFilterItem[] = Object.entries(tagCount).map(([name, count]) => ({
     id: name,
     name,
     count,
   }));
 
-  // "전체" 태그 추가
   tags.unshift({
     id: 'all',
     name: '전체',
     count: posts.length,
   });
 
-  // 태그 이름 기준으로 정렬 ("전체" 태그는 항상 첫 번째에 위치하도록 제외)
   const [allTag, ...restTags] = tags;
   const sortedTags = restTags.sort((a, b) => a.name.localeCompare(b.name));
 

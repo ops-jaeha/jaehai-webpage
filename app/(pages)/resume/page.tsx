@@ -59,7 +59,7 @@ export default async function Resume() {
 
   return (
     <div className="container mx-auto py-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_minmax(0,1fr)]">
         <aside>
           <div className="sticky top-[var(--sticky-top)]">
             <ProfileSection />

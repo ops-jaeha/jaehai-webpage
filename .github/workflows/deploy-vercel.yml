@@ -55,9 +55,8 @@ jobs:
             exit 1
           else
             echo "✅ NOTION_TOKEN is set"
+            echo "export NOTION_TOKEN=${{ secrets.NOTION_TOKEN }}" >> $GITHUB_ENV
           fi
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -84,8 +83,6 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

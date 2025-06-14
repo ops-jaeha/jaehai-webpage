@@ -1,3 +1,67 @@
 .notion-page {
   width: 100%;
 }
+
+/* 다크 테마용 스타일 */
+.dark .notion-page {
+  background-color: transparent;
+  color: hsl(var(--foreground));
+}
+
+.dark .notion-text {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .notion-title {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .notion-header {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .notion-h1,
+.dark .notion-h2,
+.dark .notion-h3 {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .notion-block {
+  color: hsl(var(--foreground)) !important;
+}
+
+.dark .notion-list-item {
+  color: hsl(var(--foreground)) !important;
+}
+
+/* 라이트 테마용 스타일 */
+.notion-page {
+  background-color: transparent;
+  color: hsl(var(--foreground));
+}
+
+.notion-text {
+  color: hsl(var(--foreground)) !important;
+}
+
+.notion-title {
+  color: hsl(var(--foreground)) !important;
+}
+
+.notion-header {
+  color: hsl(var(--foreground)) !important;
+}
+
+.notion-h1,
+.notion-h2,
+.notion-h3 {
+  color: hsl(var(--foreground)) !important;
+}
+
+.notion-block {
+  color: hsl(var(--foreground)) !important;
+}
+
+.notion-list-item {
+  color: hsl(var(--foreground)) !important;
+}

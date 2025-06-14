@@ -14,24 +14,28 @@ interface BlogNotionPageRendererProps {
 }
 
 export default function BlogNotionPageRenderer({ recordMap }: BlogNotionPageRendererProps) {
-  const { theme, resolvedTheme } = useTheme();
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // 마운트되지 않았을 때는 시스템 기본 테마를 사용
-  const isDarkMode = mounted ? theme === 'dark' : resolvedTheme === 'dark';
+  if (!mounted) {
+    // 마운트되기 전에는 빈 div를 렌더링해서 깜빡임 방지
+    return <div style={{ minHeight: '400px' }} />;
+  }
 
   return (
-    <NotionRenderer
-      recordMap={recordMap}
-      fullPage={false}
-      darkMode={isDarkMode}
-      mapPageUrl={(pageId) => `/blog/${pageId}`}
-      pageTitle={false}
-      disableHeader={true}
-    />
+    <div suppressHydrationWarning>
+      <NotionRenderer
+        recordMap={recordMap}
+        fullPage={false}
+        darkMode={theme === 'dark'}
+        mapPageUrl={(pageId) => `/blog/${pageId}`}
+        pageTitle={false}
+        disableHeader={true}
+      />
+    </div>
   );
 }

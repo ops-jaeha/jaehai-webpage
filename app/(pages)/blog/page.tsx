@@ -10,9 +10,8 @@ import { Metadata } from 'next';
 import env from '@/config/env.json';
 import { Separator } from '@/components/ui/separator';
 
-interface BlogProps {
-  searchParams: Promise<{ tag?: string; sort?: string }>;
-}
+// Static export 모드 호환성을 위한 설정
+export const dynamic = 'force-static';
 
 export const metadata: Metadata = {
   title: env.title,
@@ -22,13 +21,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Blog({ searchParams }: BlogProps) {
-  const { tag, sort } = await searchParams;
-  const selectedTag = tag || '전체';
-  const selectedSort = sort || 'latest';
-
+export default async function Blog() {
   const tags = getTags();
-  const postsPromise = getPublishedPosts({ tag: selectedTag, sort: selectedSort });
+  const postsPromise = getPublishedPosts({
+    tag: '전체',
+    sort: 'latest',
+    pageSize: 100,
+  });
+
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr_220px]">
@@ -40,7 +40,7 @@ export default async function Blog({ searchParams }: BlogProps) {
         </aside>
         <div className="order-3 space-y-8 md:order-none">
           {/* 섹션 제목 */}
-          <HeaderSection selectedTag={selectedTag} />
+          <HeaderSection selectedTag="전체" />
           <Separator className="my-4" />
           {/* 블로그 카드 그리드 */}
           <Suspense fallback={<PostListSkeleton />}>
@@ -51,7 +51,7 @@ export default async function Blog({ searchParams }: BlogProps) {
         <aside className="order-1 flex flex-col gap-6 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">
             <Suspense fallback={<TagSectionSkeleton />}>
-              <TagSectionClient tags={tags} selectedTag={selectedTag} />
+              <TagSectionClient tags={tags} selectedTag="전체" />
             </Suspense>
           </div>
         </aside>

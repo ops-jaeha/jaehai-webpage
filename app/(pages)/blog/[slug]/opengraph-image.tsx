@@ -1,5 +1,19 @@
 import { ImageResponse } from 'next/og';
-import { getPostBySlug } from '@/lib/notion';
+import { getPostBySlug, getPublishedPosts } from '@/lib/notion';
+
+// Static export 모드 호환성을 위한 설정
+export const dynamic = 'force-static';
+
+// 정적 생성을 위한 파라미터 생성
+export async function generateStaticParams() {
+  const { posts } = await getPublishedPosts({ pageSize: 100 });
+
+  return posts
+    .filter((post) => post.slug)
+    .map((post) => ({
+      slug: post.slug!,
+    }));
+}
 
 // 이미지 크기 정의
 export const size = {

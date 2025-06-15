@@ -2,7 +2,6 @@ import { Client } from '@notionhq/client';
 import type { Post, TagFilterItem } from '@/types/blog';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { NotionAPI } from 'notion-client';
-import { unstable_cache } from 'next/cache';
 import env from '@/config/env.json';
 import type { ExtendedRecordMap } from 'notion-types';
 
@@ -47,11 +46,11 @@ function getCoverImage(cover: PageObjectResponse['cover']): string {
     case 'external':
       return cover.external.url;
     case 'file':
-      // Notion 파일 URL의 만료 여부 확인
       const fileUrl = cover.file.url;
+      // 만료 여부 체크는 하지만, 클라이언트에서 처리하도록 URL은 그대로 반환
       if (isUrlExpired(fileUrl)) {
-        console.warn('Notion 이미지 URL이 만료됨:', fileUrl);
-        return ''; // 만료된 URL은 빈 문자열로 반환
+        console.warn('Notion 이미지 URL이 만료될 수 있음:', fileUrl);
+        // 만료되었어도 URL은 반환 - 클라이언트에서 fallback 처리
       }
       return fileUrl;
     default:
@@ -140,67 +139,60 @@ export interface GetPublishedPostsResponse {
   nextCursor: string | null;
 }
 
-export const getPublishedPosts = unstable_cache(
-  async ({
-    tag = '전체',
-    sort = 'latest',
-    pageSize = 10,
-    startCursor,
-  }: GetPublishedPostsParams = {}): Promise<GetPublishedPostsResponse> => {
-    const response = await notion.databases.query({
-      database_id: env.notion_ids.posts,
-      filter: {
-        and: [
-          {
-            property: 'status',
-            select: {
-              equals: 'Public',
-            },
-          },
-          {
-            property: 'type',
-            select: {
-              equals: 'Post',
-            },
-          },
-          ...(tag && tag !== '전체'
-            ? [
-                {
-                  property: 'tags',
-                  multi_select: {
-                    contains: tag,
-                  },
-                },
-              ]
-            : []),
-        ],
-      },
-      sorts: [
+export const getPublishedPosts = async ({
+  tag = '전체',
+  sort = 'latest',
+  pageSize = 10,
+  startCursor,
+}: GetPublishedPostsParams = {}): Promise<GetPublishedPostsResponse> => {
+  const response = await notion.databases.query({
+    database_id: env.notion_ids.posts,
+    filter: {
+      and: [
         {
-          property: 'createdAt',
-          direction: sort === 'latest' ? 'descending' : 'ascending',
+          property: 'status',
+          select: {
+            equals: 'Public',
+          },
         },
+        {
+          property: 'type',
+          select: {
+            equals: 'Post',
+          },
+        },
+        ...(tag && tag !== '전체'
+          ? [
+              {
+                property: 'tags',
+                multi_select: {
+                  contains: tag,
+                },
+              },
+            ]
+          : []),
       ],
-      page_size: pageSize,
-      start_cursor: startCursor,
-    });
+    },
+    sorts: [
+      {
+        property: 'createdAt',
+        direction: sort === 'latest' ? 'descending' : 'ascending',
+      },
+    ],
+    page_size: pageSize,
+    start_cursor: startCursor,
+  });
 
-    const posts = response.results
-      .filter((page): page is PageObjectResponse => 'properties' in page)
-      .map(getPostMetadata);
+  const posts = response.results
+    .filter((page): page is PageObjectResponse => 'properties' in page)
+    .map(getPostMetadata);
 
-    return {
-      posts,
-      hasMore: response.has_more,
-      nextCursor: response.next_cursor,
-    };
-  },
-  undefined,
-  {
-    tags: ['posts'],
-    revalidate: 1800, // 30분마다 새로고침하여 이미지 URL 만료 문제 완화
-  }
-);
+  return {
+    posts,
+    hasMore: response.has_more,
+    nextCursor: response.next_cursor,
+  };
+};
 
 export const getTags = async (): Promise<TagFilterItem[]> => {
   const { posts } = await getPublishedPosts({ pageSize: 100 });

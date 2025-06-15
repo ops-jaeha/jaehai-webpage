@@ -14,21 +14,53 @@ export const notionX = new NotionAPI({
   authToken: process.env.NOTION_TOKEN,
 });
 
+// URL이 만료되었는지 확인하는 함수
+function isUrlExpired(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    const expires = urlObj.searchParams.get('X-Amz-Expires');
+    const dateParam = urlObj.searchParams.get('X-Amz-Date');
+
+    if (!expires || !dateParam) return false;
+
+    // X-Amz-Date 파싱 (YYYYMMDDTHHMMSSZ 형식)
+    const year = parseInt(dateParam.slice(0, 4));
+    const month = parseInt(dateParam.slice(4, 6)) - 1; // 월은 0부터 시작
+    const day = parseInt(dateParam.slice(6, 8));
+    const hour = parseInt(dateParam.slice(9, 11));
+    const minute = parseInt(dateParam.slice(11, 13));
+    const second = parseInt(dateParam.slice(13, 15));
+
+    const signedTime = new Date(year, month, day, hour, minute, second);
+    const expirationTime = new Date(signedTime.getTime() + parseInt(expires) * 1000);
+
+    return Date.now() > expirationTime.getTime();
+  } catch {
+    return false;
+  }
+}
+
+function getCoverImage(cover: PageObjectResponse['cover']): string {
+  if (!cover) return '';
+
+  switch (cover.type) {
+    case 'external':
+      return cover.external.url;
+    case 'file':
+      // Notion 파일 URL의 만료 여부 확인
+      const fileUrl = cover.file.url;
+      if (isUrlExpired(fileUrl)) {
+        console.warn('Notion 이미지 URL이 만료됨:', fileUrl);
+        return ''; // 만료된 URL은 빈 문자열로 반환
+      }
+      return fileUrl;
+    default:
+      return '';
+  }
+}
+
 function getPostMetadata(page: PageObjectResponse): Post {
   const { properties } = page;
-
-  const getCoverImage = (cover: PageObjectResponse['cover']) => {
-    if (!cover) return '';
-
-    switch (cover.type) {
-      case 'external':
-        return cover.external.url;
-      case 'file':
-        return cover.file.url;
-      default:
-        return '';
-    }
-  };
 
   return {
     id: page.id,
@@ -166,6 +198,7 @@ export const getPublishedPosts = unstable_cache(
   undefined,
   {
     tags: ['posts'],
+    revalidate: 1800, // 30분마다 새로고침하여 이미지 URL 만료 문제 완화
   }
 );
 

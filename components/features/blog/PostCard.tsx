@@ -6,6 +6,7 @@ import { Calendar } from 'lucide-react';
 import Image from 'next/image';
 import { Post } from '@/types/blog';
 import { formatDate } from '@/lib/date';
+import { useState } from 'react';
 
 interface PostCardProps {
   post: Post;
@@ -13,19 +14,53 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, isFirst = false }: PostCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
+  // 썸네일이 있고 에러가 발생하지 않았을 때만 이미지 섹션 표시
+  const shouldShowImageSection = post.thumbnail && post.thumbnail.trim() !== '';
+
   return (
     <Card className="group bg-card/50 hover:border-primary/20 gap-0 overflow-hidden border p-0 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
-      {post.thumbnail && (
+      {shouldShowImageSection && (
         <div className="relative aspect-[2/1] overflow-hidden">
           <div className="from-background/20 absolute inset-0 z-10 bg-gradient-to-t to-transparent" />
-          <Image
-            src={post.thumbnail}
-            alt={post.title}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={isFirst}
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-          />
+          {!imageError ? (
+            <>
+              {imageLoading && (
+                <div className="bg-muted absolute inset-0 flex items-center justify-center">
+                  <div className="border-primary h-8 w-8 animate-spin rounded-full border-2 border-t-transparent" />
+                </div>
+              )}
+              <Image
+                src={post.thumbnail!}
+                alt={post.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={isFirst}
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={handleImageError}
+                onLoad={handleImageLoad}
+              />
+            </>
+          ) : (
+            <Image
+              src="/placeholder-post.svg"
+              alt="기본 포스트 이미지"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
+            />
+          )}
         </div>
       )}
       <CardContent className="p-6">

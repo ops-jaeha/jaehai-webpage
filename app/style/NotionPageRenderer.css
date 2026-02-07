@@ -1,5 +1,20 @@
 .notion-page {
   width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.notion-page img,
+.notion-page video,
+.notion-page iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+.notion-page .notion-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* 다크 테마용 스타일 */

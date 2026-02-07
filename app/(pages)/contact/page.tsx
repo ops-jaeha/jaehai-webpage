@@ -20,8 +20,8 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="container mx-auto flex max-w-lg items-start py-8">
-      <div className="grid gap-6 md:grid-cols-[240px_minmax(0,calc(72rem-240px))]">
+    <div className="container flex max-w-lg items-start py-6 sm:py-8">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[200px_minmax(0,calc(72rem-240px))] lg:grid-cols-[240px_minmax(0,calc(72rem-240px))]">
         <aside className="order-2 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">
             <ProfileSection />
@@ -30,8 +30,8 @@ export default function ContactPage() {
         <div className="order-3 space-y-8 md:order-none">
           <Card className="w-full">
             <CardHeader className="text-center">
-              <CardTitle className="py-2">{env.title}</CardTitle>
-              <CardTitle className="py-2 text-3xl font-bold">Contact Me</CardTitle>
+              <CardTitle className="py-2 text-sm sm:text-base">{env.title}</CardTitle>
+              <CardTitle className="py-2 text-2xl font-bold sm:text-3xl">Contact Me</CardTitle>
               <CardDescription className="py-2">
                 궁금한 점이 있으시면 아래 플랫폼으로 편하게 연락주세요.
               </CardDescription>

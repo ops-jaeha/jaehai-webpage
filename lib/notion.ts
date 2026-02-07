@@ -13,6 +13,15 @@ export const notionX = new NotionAPI({
   authToken: process.env.NOTION_TOKEN,
 });
 
+/** 이력서 페이지 RecordMap. 빌드 시 토큰이 없으면 null 반환. */
+export async function getResumeRecordMap(): Promise<ExtendedRecordMap | null> {
+  try {
+    return await notionX.getPage(env.notion_ids.resume);
+  } catch {
+    return null;
+  }
+}
+
 // URL이 만료되었는지 확인하는 함수
 function isUrlExpired(url: string): boolean {
   try {
@@ -87,42 +96,46 @@ export const getPostBySlug = async (
   recordMap: ExtendedRecordMap | null;
   post: Post | null;
 }> => {
-  const response = await notion.databases.query({
-    database_id: env.notion_ids.posts,
-    filter: {
-      and: [
-        {
-          property: 'slug',
-          rich_text: {
-            equals: slug,
+  try {
+    const response = await notion.databases.query({
+      database_id: env.notion_ids.posts,
+      filter: {
+        and: [
+          {
+            property: 'slug',
+            rich_text: {
+              equals: slug,
+            },
           },
-        },
-        {
-          property: 'status',
-          select: {
-            equals: 'Public',
+          {
+            property: 'status',
+            select: {
+              equals: 'Public',
+            },
           },
-        },
-      ],
-    },
-  });
+        ],
+      },
+    });
 
-  const page = response.results[0] as PageObjectResponse | undefined;
+    const page = response.results[0] as PageObjectResponse | undefined;
 
-  if (!page) {
+    if (!page) {
+      return {
+        recordMap: null,
+        post: null,
+      };
+    }
+
+    // notion-client를 사용해 페이지의 전체 콘텐츠(RecordMap)를 가져옵니다.
+    const recordMap = await notionX.getPage(page.id);
+
     return {
-      recordMap: null,
-      post: null,
+      recordMap,
+      post: getPostMetadata(page),
     };
+  } catch {
+    return { recordMap: null, post: null };
   }
-
-  // notion-client를 사용해 페이지의 전체 콘텐츠(RecordMap)를 가져옵니다.
-  const recordMap = await notionX.getPage(page.id);
-
-  return {
-    recordMap,
-    post: getPostMetadata(page),
-  };
 };
 
 // --- 아래 코드는 기존 코드와 동일합니다 ---
@@ -145,84 +158,92 @@ export const getPublishedPosts = async ({
   pageSize = 10,
   startCursor,
 }: GetPublishedPostsParams = {}): Promise<GetPublishedPostsResponse> => {
-  const response = await notion.databases.query({
-    database_id: env.notion_ids.posts,
-    filter: {
-      and: [
-        {
-          property: 'status',
-          select: {
-            equals: 'Public',
+  try {
+    const response = await notion.databases.query({
+      database_id: env.notion_ids.posts,
+      filter: {
+        and: [
+          {
+            property: 'status',
+            select: {
+              equals: 'Public',
+            },
           },
-        },
-        {
-          property: 'type',
-          select: {
-            equals: 'Post',
+          {
+            property: 'type',
+            select: {
+              equals: 'Post',
+            },
           },
-        },
-        ...(tag && tag !== '전체'
-          ? [
-              {
-                property: 'tags',
-                multi_select: {
-                  contains: tag,
+          ...(tag && tag !== '전체'
+            ? [
+                {
+                  property: 'tags',
+                  multi_select: {
+                    contains: tag,
+                  },
                 },
-              },
-            ]
-          : []),
-      ],
-    },
-    sorts: [
-      {
-        property: 'createdAt',
-        direction: sort === 'latest' ? 'descending' : 'ascending',
+              ]
+            : []),
+        ],
       },
-    ],
-    page_size: pageSize,
-    start_cursor: startCursor,
-  });
+      sorts: [
+        {
+          property: 'createdAt',
+          direction: sort === 'latest' ? 'descending' : 'ascending',
+        },
+      ],
+      page_size: pageSize,
+      start_cursor: startCursor,
+    });
 
-  const posts = response.results
-    .filter((page): page is PageObjectResponse => 'properties' in page)
-    .map(getPostMetadata);
+    const posts = response.results
+      .filter((page): page is PageObjectResponse => 'properties' in page)
+      .map(getPostMetadata);
 
-  return {
-    posts,
-    hasMore: response.has_more,
-    nextCursor: response.next_cursor,
-  };
+    return {
+      posts,
+      hasMore: response.has_more,
+      nextCursor: response.next_cursor,
+    };
+  } catch {
+    return { posts: [], hasMore: false, nextCursor: null };
+  }
 };
 
 export const getTags = async (): Promise<TagFilterItem[]> => {
-  const { posts } = await getPublishedPosts({ pageSize: 100 });
+  try {
+    const { posts } = await getPublishedPosts({ pageSize: 100 });
 
-  const tagCount = posts.reduce(
-    (acc, post) => {
-      post.tags?.forEach((tag) => {
-        acc[tag] = (acc[tag] || 0) + 1;
-      });
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+    const tagCount = posts.reduce(
+      (acc, post) => {
+        post.tags?.forEach((tag) => {
+          acc[tag] = (acc[tag] || 0) + 1;
+        });
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-  const tags: TagFilterItem[] = Object.entries(tagCount).map(([name, count]) => ({
-    id: name,
-    name,
-    count,
-  }));
+    const tags: TagFilterItem[] = Object.entries(tagCount).map(([name, count]) => ({
+      id: name,
+      name,
+      count,
+    }));
 
-  tags.unshift({
-    id: 'all',
-    name: '전체',
-    count: posts.length,
-  });
+    tags.unshift({
+      id: 'all',
+      name: '전체',
+      count: posts.length,
+    });
 
-  const [allTag, ...restTags] = tags;
-  const sortedTags = restTags.sort((a, b) => a.name.localeCompare(b.name));
+    const [allTag, ...restTags] = tags;
+    const sortedTags = restTags.sort((a, b) => a.name.localeCompare(b.name));
 
-  return [allTag, ...sortedTags];
+    return [allTag, ...sortedTags];
+  } catch {
+    return [{ id: 'all', name: '전체', count: 0 }];
+  }
 };
 
 export interface CreatePostParams {

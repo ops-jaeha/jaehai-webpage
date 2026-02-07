@@ -63,8 +63,8 @@ export function PostCard({ post, isFirst = false }: PostCardProps) {
           />
         </div>
       )}
-      <CardContent className="p-6">
-        <div className="mb-4 flex flex-wrap gap-2">
+      <CardContent className="p-4 sm:p-6">
+        <div className="mb-3 flex flex-wrap gap-1.5 sm:mb-4 sm:gap-2">
           {post.tags?.map((tag) => (
             <Badge
               key={tag}
@@ -75,15 +75,15 @@ export function PostCard({ post, isFirst = false }: PostCardProps) {
             </Badge>
           ))}
         </div>
-        <h2 className="group-hover:text-primary mb-2 text-xl font-bold tracking-tight transition-colors">
+        <h2 className="group-hover:text-primary mb-2 text-base font-bold tracking-tight transition-colors sm:text-lg md:text-xl">
           {post.title}
         </h2>
         {post.description && (
-          <p className="text-muted-foreground mt-2 line-clamp-2 leading-relaxed">
+          <p className="text-muted-foreground mt-2 line-clamp-2 text-sm leading-relaxed sm:text-base">
             {post.description}
           </p>
         )}
-        <div className="text-muted-foreground mt-6 flex items-center gap-x-4 text-sm">
+        <div className="text-muted-foreground mt-4 flex items-center gap-x-3 text-xs sm:mt-6 sm:gap-x-4 sm:text-sm">
           {post.createdAt && (
             <div className="flex items-center gap-1.5">
               <Calendar className="h-4 w-4" />

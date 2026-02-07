@@ -2,8 +2,10 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, User } from 'lucide-react';
 import { getPostBySlug, getPublishedPosts } from '@/lib/notion';
+import { transformRecordMapImageUrls } from '@/lib/notion-image-proxy';
 import { formatDate } from '@/lib/date';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import { Metadata } from 'next';
 import env from '@/config/env.json';
 import BlogNotionPageRenderer from '@/app/_components/client/BlogNotionPageRenderer';
@@ -52,10 +54,14 @@ export async function generateMetadata({
 }
 
 export const generateStaticParams = async () => {
-  const { posts } = await getPublishedPosts();
-  return posts.map((post) => ({
-    slug: post.slug,
-  }));
+  try {
+    const { posts } = await getPublishedPosts();
+    return posts.map((post) => ({
+      slug: post.slug,
+    }));
+  } catch {
+    return [];
+  }
 };
 
 export const revalidate = 60;
@@ -228,12 +234,17 @@ export default async function BlogPost({ params }: BlogPostProps) {
     notFound();
   }
 
-  // recordMap에서 TOC 데이터 추출
+  // Notion 임시 이미지 URL을 프록시 절대 URL로 변환 (Asset의 new URL(source) 대응)
+  const headersList = await headers();
+  const host = headersList.get('host') ?? '';
+  const proto = headersList.get('x-forwarded-proto') ?? (host.includes('localhost') ? 'http' : 'https');
+  const origin = host ? `${proto}://${host}` : '';
+  const recordMapWithProxiedImages = transformRecordMapImageUrls(recordMap, origin);
   const tocData = extractTocFromRecordMap(recordMap);
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="grid gap-6 md:grid-cols-[240px_minmax(0,calc(72rem-460px))_220px]">
+    <div className="container py-6 sm:py-8">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-[200px_minmax(0,1fr)_200px] lg:grid-cols-[240px_minmax(0,calc(72rem-460px))_220px]">
         <aside className="order-2 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">
             <ProfileSection />
@@ -245,10 +256,10 @@ export default async function BlogPost({ params }: BlogPostProps) {
               <div className="flex gap-2">
                 {post.tags?.map((tag) => <Badge key={tag}>{tag}</Badge>)}
               </div>
-              <h1 className="text-3xl font-bold md:text-4xl">{post.title}</h1>
+              <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{post.title}</h1>
             </div>
 
-            <div className="text-muted-foreground flex gap-4 text-sm">
+            <div className="text-muted-foreground flex flex-wrap gap-3 gap-y-1 text-xs sm:gap-4 sm:text-sm">
               <div className="flex items-center gap-1">
                 <User className="h-4 w-4" />
                 <span>{env.user_name}</span>
@@ -266,7 +277,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
           <TableOfContents tocData={tocData} isMobile={true} />
 
           <div>
-            <BlogNotionPageRenderer recordMap={recordMap} />
+            <BlogNotionPageRenderer recordMap={recordMapWithProxiedImages} />
           </div>
 
           <Separator className="my-16" />

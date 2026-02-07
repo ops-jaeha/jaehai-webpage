@@ -11,8 +11,8 @@ export default function PostList({ postsPromise }: PostListProps) {
   const { posts } = use(postsPromise);
 
   return (
-    <div className="space-y-6">
-      <div className="grid gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="grid grid-cols-1 gap-3 sm:gap-4">
         {posts.map((post, index) => (
           <Link href={`/blog/${post.slug}`} key={post.id}>
             <PostCard post={post} isFirst={index === 0} />

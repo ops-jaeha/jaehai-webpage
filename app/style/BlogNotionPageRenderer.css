@@ -1,7 +1,24 @@
 .notion-h1 {
   margin-top: 0;
+  word-break: break-word;
 }
 
 .notion-page {
   padding: 0;
+  max-width: 100%;
+}
+
+.notion-page .notion-image {
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .notion-page .notion-h1,
+  .notion-page .notion-h2,
+  .notion-page .notion-h3 {
+    font-size: 1.125rem;
+  }
+  .notion-page .notion-text {
+    font-size: 0.9375rem;
+  }
 }

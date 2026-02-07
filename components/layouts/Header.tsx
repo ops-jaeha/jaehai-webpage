@@ -6,14 +6,18 @@ import { ThemeToggle } from '@/components/theme/ThemeToggle';
 export default function Header() {
   return (
     <header className="bg-background sticky top-0 z-50 border-b">
-      <div className="container mx-auto flex h-[var(--header-height)] max-w-[1000px] items-center px-4 py-2">
-        <div className="grid w-full grid-cols-2 items-center">
-          <div className="flex items-center justify-start">
-            <Link href="/" className="text-xl font-normal">
+      <div className="container flex h-[var(--header-height)] max-w-[1000px] items-center py-2 sm:px-4">
+        <div className="grid w-full grid-cols-[1fr_auto] items-center gap-2">
+          <div className="flex min-w-0 items-center justify-start">
+            <Link
+              href="/"
+              className="text-base font-normal sm:text-xl"
+              aria-label="홈"
+            >
               <span className="font-bold">Jaehai</span>.Opslog
             </Link>
           </div>
-          <nav className="flex items-center justify-end gap-2 sm:gap-4">
+          <nav className="flex items-center justify-end gap-1 sm:gap-2 md:gap-4">
             {[
               { href: '/blog', label: 'Blog' },
               { href: '/resume', label: 'Resume' },
@@ -23,7 +27,7 @@ export default function Header() {
                 key={href}
                 href={href}
                 prefetch={prefetch}
-                className="hover:text-primary rounded-md px-3 py-2 font-medium transition-colors"
+                className="hover:text-primary rounded-md px-2 py-1.5 text-sm font-medium transition-colors sm:px-3 sm:py-2 sm:text-base"
               >
                 {label}
               </Link>

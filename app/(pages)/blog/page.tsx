@@ -10,8 +10,8 @@ import { Metadata } from 'next';
 import env from '@/config/env.json';
 import { Separator } from '@/components/ui/separator';
 
-// Static export 모드 호환성을 위한 설정
-export const dynamic = 'force-static';
+// ISR: Notion 내용이 주기적으로 갱신되도록 (초 단위)
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: env.title,
@@ -30,8 +30,8 @@ export default async function Blog() {
   });
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-[240px_1fr_220px]">
+    <div className="container py-6 sm:py-8">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[200px_1fr_200px] lg:grid-cols-[240px_1fr_220px]">
         {/* 좌측 사이드바 */}
         <aside>
           <div className="sticky top-[var(--sticky-top)]">

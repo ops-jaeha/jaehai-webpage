@@ -1,19 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { getPostBySlug, getPublishedPosts } from '@/lib/notion';
-
-// Static export 모드 호환성을 위한 설정
-export const dynamic = 'force-static';
-
-// 정적 생성을 위한 파라미터 생성
-export async function generateStaticParams() {
-  const { posts } = await getPublishedPosts({ pageSize: 100 });
-
-  return posts
-    .filter((post) => post.slug)
-    .map((post) => ({
-      slug: post.slug!,
-    }));
-}
+import { getPostBySlug } from '@/lib/notion';
 
 // 이미지 크기 정의
 export const size = {
@@ -25,9 +11,13 @@ export const size = {
 export const contentType = 'image/png';
 
 // OG 이미지 생성 함수
-export default async function OgImage({ params }: { params: { slug: string } }) {
-  // 게시물 데이터 가져오기
-  const { post } = await getPostBySlug(params.slug);
+export default async function OgImage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const { post } = await getPostBySlug(slug);
 
   // 게시물이 없는 경우 기본 이미지 반환
   if (!post) {

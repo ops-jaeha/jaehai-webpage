@@ -12,7 +12,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    console.log('[notion-image] request blockId=', blockId);
     const normalizedId = blockId.replace(/-/g, '');
+    console.log('[notion-image] normalizedId=', normalizedId);
     const block = await notion.blocks.retrieve({
       block_id: normalizedId,
     });
@@ -32,6 +34,7 @@ export async function GET(request: NextRequest) {
       | undefined;
 
     if (!image) {
+      console.warn('[notion-image] no image data for block', normalizedId);
       return NextResponse.json({ error: 'No image data' }, { status: 404 });
     }
 
@@ -44,6 +47,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'No image URL' }, { status: 404 });
     }
 
+    console.log('[notion-image] fetching imageUrl=', imageUrl);
     const res = await fetch(imageUrl, {
       headers: {
         Accept: 'image/*',
@@ -51,7 +55,9 @@ export async function GET(request: NextRequest) {
       cache: 'no-store',
     });
 
+    console.log('[notion-image] fetched status=', res.status, 'for', imageUrl);
     if (!res.ok) {
+      console.warn('[notion-image] failed to fetch image, status=', res.status);
       return NextResponse.json(
         { error: 'Failed to fetch image', status: res.status },
         { status: 502 }
@@ -69,7 +75,7 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.error('Notion image proxy error:', err);
+    console.error('[notion-image] proxy error for request:', request.url, err);
     return NextResponse.json(
       { error: 'Failed to load image' },
       { status: 500 }

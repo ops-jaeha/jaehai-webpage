@@ -29,8 +29,9 @@ export default function BlogNotionPageRenderer({ recordMap }: BlogNotionPageRend
     return <div style={{ minHeight: '400px' }} />;
   }
 
-  const mapImageUrl = (url: string, block: { id?: string }) => {
+  const mapImageUrl = (url?: string, block?: { id?: string }) => {
     // recordMap에 이미 절대 URL로 넣었으면 그대로 반환
+    if (!url) return '';
     if (url.includes('/api/notion-image')) return url;
     if (NOTION_IMAGE_URL_PATTERN.test(url) && block?.id) {
       const path = `/api/notion-image?blockId=${encodeURIComponent(block.id)}`;

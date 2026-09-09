@@ -24,7 +24,7 @@
     "date-fns": "^4.1.0",
     "lucide-react": "^0.513.0",
     "next": "^16.1.6",
-    "next-mdx-remote": "^5.0.0",
+    "next-mdx-remote": "^6.0.0",
     "notion-client": "^7.4.2",
     "notion-to-md": "^3.1.9",
     "notion-types": "^7.4.2",

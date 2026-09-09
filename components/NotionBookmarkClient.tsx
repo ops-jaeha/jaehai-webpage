@@ -16,6 +16,12 @@ export function NotionBookmark({ url, title }: { url: string; title?: string }) 
 
   useEffect(() => {
     const fetch_og_data = async () => {
+      // Guard: don't call API if url is empty/undefined
+      if (!url || url === 'undefined' || url.trim() === '') {
+        set_is_loading(false);
+        return;
+      }
+
       try {
         const response = await fetch(`/api/og?url=${encodeURIComponent(url)}`);
         if (response.ok) {

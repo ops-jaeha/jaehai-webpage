@@ -3,9 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const url = searchParams.get('url');
+  const referer = request.headers.get('referer') || 'unknown';
 
-  if (!url) {
-    return NextResponse.json({ error: 'URL is required' }, { status: 400 });
+  console.log(`[og-api] request url="${url}", referer="${referer}"`);
+
+  if (!url || url === 'undefined') {
+    console.warn(`[og-api] invalid url="${url}" from referer="${referer}"`);
+    return NextResponse.json({ error: 'Valid URL is required' }, { status: 400 });
   }
 
   try {

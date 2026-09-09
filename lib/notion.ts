@@ -113,6 +113,9 @@ n2m.setCustomTransformer('bookmark', async (block) => {
   ).bookmark;
   const url = bookmark?.url || '';
   const caption = bookmark?.caption?.map((c) => c.plain_text).join('') || url;
+
+  if (!url) return '';
+
   const safe_url = JSON.stringify(url);
   const safe_caption = JSON.stringify(caption);
 
@@ -122,6 +125,9 @@ n2m.setCustomTransformer('bookmark', async (block) => {
 n2m.setCustomTransformer('link_preview', async (block) => {
   const link_preview = (block as { link_preview?: { url?: string } }).link_preview;
   const url = link_preview?.url || '';
+
+  if (!url) return '';
+
   const safe_url = JSON.stringify(url);
 
   return `\n\n<NotionBookmark url={${safe_url}} title={${safe_url}} />\n\n`;

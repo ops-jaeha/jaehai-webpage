@@ -133,7 +133,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
     notFound();
   }
 
-  const tocData = extractTocFromMarkdown(markdown);
+  const tocData = extractTocFromMarkdown(markdown!);
 
   return (
     <div className="container py-6 sm:py-8">

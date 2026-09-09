@@ -137,7 +137,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
 
   return (
     <div className="container py-6 sm:py-8">
-      <div className="grid gap-6 md:grid-cols-[220px_minmax(0,1fr)_220px] lg:grid-cols-[260px_minmax(0,1fr)_240px]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_minmax(0,1fr)_220px] lg:grid-cols-[260px_minmax(0,1fr)_240px]">
         <aside className="order-2 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">
             <ProfileSection />
@@ -177,7 +177,7 @@ export default async function BlogPost({ params }: BlogPostProps) {
 
           <GiscusComments />
         </section>
-        <aside className="order-1 flex flex-col gap-6 md:order-none">
+        <aside className="order-1 hidden flex-col gap-6 md:order-none md:flex">
           <div className="sticky top-[var(--sticky-top)]">
             <TableOfContents tocData={tocData} isMobile={false} />
           </div>

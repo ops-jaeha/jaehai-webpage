@@ -58,7 +58,7 @@ const components = {
           src={src}
           alt={alt || ''}
           loading="lazy"
-          className="mx-auto max-h-[600px] w-auto rounded-lg object-contain shadow-md"
+          className="mx-auto max-h-[600px] w-auto max-w-full rounded-lg object-contain shadow-md"
         />
       </span>
     );
@@ -139,7 +139,7 @@ const components = {
     />
   ),
   table: (props: ComponentPropsWithoutRef<'table'>) => (
-    <div className="my-6 w-full overflow-y-auto">
+    <div className="my-6 w-full overflow-x-auto">
       <table {...props} className="w-full border-collapse text-sm" />
     </div>
   ),

@@ -10,8 +10,8 @@ import { Metadata } from 'next';
 import env from '@/config/env.json';
 import { Separator } from '@/components/ui/separator';
 
-// ISR: Notion 내용이 주기적으로 갱신되도록 (초 단위)
-export const revalidate = 60;
+// 매 요청마다 노션에서 최신 글 목록을 새로 가져오도록 캐시를 사용하지 않음
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: env.title,
@@ -21,11 +21,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Blog() {
+interface BlogProps {
+  searchParams: Promise<{ tag?: string; sort?: string }>;
+}
+
+export default async function Blog({ searchParams }: BlogProps) {
+  const { tag, sort } = await searchParams;
+  const selectedTag = tag || '전체';
+  const selectedSort = sort || 'latest';
+
   const tags = getTags();
   const postsPromise = getPublishedPosts({
-    tag: '전체',
-    sort: 'latest',
+    tag: selectedTag,
+    sort: selectedSort,
     pageSize: 100,
   });
 
@@ -40,10 +48,10 @@ export default async function Blog() {
         </aside>
         <div className="order-3 space-y-8 md:order-none">
           {/* 섹션 제목 */}
-          <HeaderSection selectedTag="전체" />
+          <HeaderSection selectedTag={selectedTag} />
           <Separator className="my-4" />
           {/* 블로그 카드 그리드 */}
-          <Suspense fallback={<PostListSkeleton />}>
+          <Suspense key={`${selectedTag}-${selectedSort}`} fallback={<PostListSkeleton />}>
             <PostListSuspense postsPromise={postsPromise} />
           </Suspense>
         </div>
@@ -51,7 +59,7 @@ export default async function Blog() {
         <aside className="order-1 flex flex-col gap-6 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">
             <Suspense fallback={<TagSectionSkeleton />}>
-              <TagSectionClient tags={tags} selectedTag="전체" />
+              <TagSectionClient tags={tags} selectedTag={selectedTag} />
             </Suspense>
           </div>
         </aside>

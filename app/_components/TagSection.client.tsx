@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { TagFilterItem } from '@/types/blog';
 import { cn } from '@/lib/utils';
 import { use } from 'react';
+import { useSearchParams } from 'next/navigation';
 interface TagSectionProps {
   tags: Promise<TagFilterItem[]>;
   selectedTag: string;
@@ -12,6 +13,14 @@ interface TagSectionProps {
 
 export default function TagSection({ tags, selectedTag }: TagSectionProps) {
   const allTags = use(tags);
+  const searchParams = useSearchParams();
+
+  const buildHref = (tagName: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tag', tagName);
+    return `?${params.toString()}`;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -20,7 +29,7 @@ export default function TagSection({ tags, selectedTag }: TagSectionProps) {
       <CardContent>
         <div className="flex flex-col gap-3">
           {allTags.map((tag) => (
-            <Link href={`?tag=${tag.name}`} key={tag.name}>
+            <Link href={buildHref(tag.name)} key={tag.name} scroll={false}>
               <div
                 className={cn(
                   'hover:bg-muted-foreground/10 text-muted-foreground flex items-center justify-between rounded-md p-1.5 text-sm transition-colors',

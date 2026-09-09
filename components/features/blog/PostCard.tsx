@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Post } from '@/types/blog';
 import { formatDate } from '@/lib/date';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface PostCardProps {
   post: Post;
@@ -14,6 +15,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, isFirst = false }: PostCardProps) {
+  const router = useRouter();
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [currentImageSrc, setCurrentImageSrc] = useState(post.thumbnail);
@@ -69,7 +71,12 @@ export function PostCard({ post, isFirst = false }: PostCardProps) {
             <Badge
               key={tag}
               variant="secondary"
-              className="bg-primary/10 text-primary hover:bg-primary/20 font-medium transition-colors"
+              className="bg-primary/10 text-primary hover:bg-primary/20 cursor-pointer font-medium transition-colors"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                router.push(`/blog?tag=${encodeURIComponent(tag)}`, { scroll: false });
+              }}
             >
               {tag}
             </Badge>

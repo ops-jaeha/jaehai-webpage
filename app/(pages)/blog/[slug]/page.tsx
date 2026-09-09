@@ -1,10 +1,11 @@
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { CalendarDays, User } from 'lucide-react';
-import { getPostBySlug, getPublishedPosts } from '@/lib/notion';
+import { getPostBySlug } from '@/lib/notion';
 import { formatDate } from '@/lib/date';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import Link from 'next/link';
 import env from '@/config/env.json';
 import GiscusComments from '@/components/GiscusComments';
 import TableOfContents from '@/app/_components/client/TableOfContents';
@@ -48,18 +49,8 @@ export async function generateMetadata({
   };
 }
 
-export const generateStaticParams = async () => {
-  try {
-    const { posts } = await getPublishedPosts();
-    return posts.map((post) => ({
-      slug: post.slug,
-    }));
-  } catch {
-    return [];
-  }
-};
-
-export const revalidate = 60;
+// 매 요청마다 노션에서 최신 글 내용을 새로 가져오도록 캐시를 사용하지 않음
+export const dynamic = 'force-dynamic';
 
 interface BlogPostProps {
   params: Promise<{ slug: string }>;
@@ -146,8 +137,12 @@ export default async function BlogPost({ params }: BlogPostProps) {
         <section className="order-3 space-y-8 md:order-none">
           <div className="space-y-4">
             <div className="space-y-2">
-              <div className="flex gap-2">
-                {post.tags?.map((tag) => <Badge key={tag}>{tag}</Badge>)}
+              <div className="flex flex-wrap gap-2">
+                {post.tags?.map((tag) => (
+                  <Badge key={tag} asChild>
+                    <Link href={`/blog?tag=${encodeURIComponent(tag)}`}>{tag}</Link>
+                  </Badge>
+                ))}
               </div>
               <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{post.title}</h1>
             </div>

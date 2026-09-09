@@ -55,7 +55,7 @@ export default function TableOfContents({ tocData, isMobile = false }: TableOfCo
 
   if (isMobile) {
     return (
-      <div className="sticky top-[var(--sticky-top)] mb-6 md:hidden">
+      <div className="mb-6 md:hidden">
         <details className="bg-muted/60 rounded-lg p-4 backdrop-blur-sm">
           <summary className="cursor-pointer text-lg font-semibold">목차</summary>
           <nav className="mt-3 space-y-3 text-sm">

@@ -103,31 +103,34 @@ const components = {
     />
   ),
   p: (props: ComponentPropsWithoutRef<'p'>) => (
-    <p {...props} className="text-foreground/90 leading-7 [&:not(:first-child)]:mt-4" />
+    <p
+      {...props}
+      className="text-foreground/90 text-sm leading-6 [&:not(:first-child)]:mt-4 sm:text-base sm:leading-7"
+    />
   ),
   ul: (props: ComponentPropsWithoutRef<'ul'>) => (
-    <ul {...props} className="my-4 ml-6 list-disc [&>li]:mt-2" />
+    <ul {...props} className="my-4 ml-6 list-disc text-sm sm:text-base [&>li]:mt-2" />
   ),
   ol: (props: ComponentPropsWithoutRef<'ol'>) => (
-    <ol {...props} className="my-4 ml-6 list-decimal [&>li]:mt-2" />
+    <ol {...props} className="my-4 ml-6 list-decimal text-sm sm:text-base [&>li]:mt-2" />
   ),
   blockquote: (props: ComponentPropsWithoutRef<'blockquote'>) => (
     <blockquote
       {...props}
-      className="border-primary/50 text-muted-foreground mt-6 border-l-4 pl-4 italic"
+      className="border-primary/50 text-muted-foreground mt-6 border-l-4 pl-4 text-sm italic sm:text-base"
     />
   ),
   code: (props: ComponentPropsWithoutRef<'code'>) => {
     const isInline = !props.className?.includes('language-');
     if (isInline) {
       return (
-        <code className="bg-muted text-primary rounded px-1.5 py-0.5 font-mono text-sm font-medium">
+        <code className="bg-muted text-primary rounded px-1.5 py-0.5 font-mono text-xs font-medium sm:text-sm">
           {props.children}
         </code>
       );
     }
     return (
-      <code {...props} className="font-mono text-sm">
+      <code {...props} className="font-mono text-xs sm:text-sm">
         {props.children}
       </code>
     );
@@ -135,12 +138,12 @@ const components = {
   pre: (props: ComponentPropsWithoutRef<'pre'>) => (
     <pre
       {...props}
-      className="my-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 font-mono text-sm text-zinc-100 dark:bg-zinc-950"
+      className="my-4 overflow-x-auto rounded-lg bg-zinc-900 p-4 font-mono text-xs text-zinc-100 sm:text-sm dark:bg-zinc-950"
     />
   ),
   table: (props: ComponentPropsWithoutRef<'table'>) => (
     <div className="my-6 w-full overflow-x-auto">
-      <table {...props} className="w-full border-collapse text-sm" />
+      <table {...props} className="w-full border-collapse text-xs sm:text-sm" />
     </div>
   ),
   th: (props: ComponentPropsWithoutRef<'th'>) => (
@@ -164,7 +167,7 @@ export default function MarkdownRenderer({ content }: { content: string }) {
   }
 
   return (
-    <article className="prose dark:prose-invert max-w-none leading-relaxed break-words">
+    <article className="prose prose-sm dark:prose-invert sm:prose-base max-w-none leading-relaxed break-words">
       <MDXRemote
         source={content}
         options={{

@@ -214,7 +214,7 @@
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  max-width: 72rem;
+  max-width: 84rem;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -231,4 +231,137 @@
     padding-left: 2rem;
     padding-right: 2rem;
   }
+}
+
+/* Notion 다단 컬럼 레이아웃 지원 */
+.notion-column-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+@media (min-width: 768px) {
+  .notion-column-list {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .notion-column-list > .notion-column:first-child {
+    flex: 0 0 240px;
+    min-width: 200px;
+    max-width: 260px;
+  }
+
+  .notion-column-list > .notion-column:first-child h2 {
+    margin-top: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    font-size: 1.25rem;
+    color: var(--foreground);
+  }
+
+  .notion-column-list > .notion-column:last-child {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+}
+
+.notion-column {
+  width: 100%;
+}
+
+.notion-column > *:first-child {
+  margin-top: 0 !important;
+}
+
+/* Notion Callout (HBA 등 프로젝트/강조 박스) */
+.notion-callout {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  margin: 1.25rem 0;
+  border-radius: 0.625rem;
+  background-color: var(--secondary);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.notion-callout-icon {
+  font-size: 1.25rem;
+  line-height: 1.5;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.notion-callout-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notion-callout-content > *:first-child {
+  margin-top: 0 !important;
+  font-weight: 600;
+}
+
+.notion-callout-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+.notion-callout-content p {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/* Notion Bookmark 링크 카드 */
+.notion-bookmark {
+  margin: 1.25rem 0;
+  width: 100%;
+}
+
+.notion-bookmark-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1.25rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--border);
+  background-color: var(--card);
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.notion-bookmark-link:hover {
+  border-color: var(--primary);
+  background-color: var(--secondary);
+  transform: translateY(-1px);
+}
+
+.notion-bookmark-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.notion-bookmark-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.notion-bookmark-url {
+  font-size: 0.75rem;
+  color: var(--muted-foreground);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

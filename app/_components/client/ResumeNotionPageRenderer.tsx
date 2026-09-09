@@ -8,6 +8,9 @@ import { useEffect, useState } from 'react';
 import 'react-notion-x/src/styles.css';
 import 'prismjs/themes/prism-tomorrow.css';
 
+const NOTION_IMAGE_URL_PATTERN =
+  /^https:\/\/(www\.)?notion\.so\/|^https:\/\/s3\.|^https:\/\/prod-files-secure\.s3\.|^https:\/\/file\.notion\.so/;
+
 interface ResumeNotionPageRendererProps {
   recordMap: ExtendedRecordMap;
 }
@@ -25,12 +28,26 @@ export default function ResumeNotionPageRenderer({ recordMap }: ResumeNotionPage
     return <div style={{ minHeight: '400px' }} />;
   }
 
+  const mapImageUrl = (url?: string, block?: { id?: string }) => {
+    if (!url) return '';
+    if (url.includes('/api/notion-image')) return url;
+    if (NOTION_IMAGE_URL_PATTERN.test(url) && block?.id) {
+      const path = `/api/notion-image?blockId=${encodeURIComponent(block.id)}`;
+      if (typeof window !== 'undefined') {
+        return `${window.location.origin}${path}`;
+      }
+      return path;
+    }
+    return url;
+  };
+
   return (
     <div suppressHydrationWarning>
       <NotionRenderer
         recordMap={recordMap}
         fullPage={false}
         darkMode={theme === 'dark'}
+        mapImageUrl={mapImageUrl}
         pageTitle={true}
         disableHeader={true}
       />

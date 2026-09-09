@@ -1,41 +1,15 @@
 import { Metadata } from 'next';
-import { headers } from 'next/headers';
-import { getResumeRecordMap } from '@/lib/notion';
-import { transformRecordMapImageUrls } from '@/lib/notion-image-proxy';
+import { getResumeMarkdown, getResumePage } from '@/lib/notion';
 import env from '@/config/env.json';
-import ResumeNotionPageRenderer from '@/app/_components/client/ResumeNotionPageRenderer';
-import type { ExtendedRecordMap } from 'notion-types';
 import { Separator } from '@/components/ui/separator';
-import '@/app/style/NotionPageRenderer.css';
 import ProfileSection from '@/app/_components/ProfileSection';
+import MarkdownRenderer from '@/components/MarkdownRenderer';
 
-// recordMap에서 페이지 제목 추출 함수
-function getPageTitle(recordMap: ExtendedRecordMap): string {
-  const pageId = Object.keys(recordMap.block).find(
-    (id) => recordMap.block[id]?.value?.type === 'page'
-  );
-
-  if (!pageId) return 'Resume';
-
-  const pageBlock = recordMap.block[pageId]?.value;
-  const properties = pageBlock?.properties;
-
-  if (properties?.title) {
-    const titleArray = properties.title as Array<string | [string, Array<[string, string]>]>;
-    return (
-      titleArray
-        .map((item) => (Array.isArray(item) ? item[0] : item))
-        .join('')
-        .trim() || 'Resume'
-    );
-  }
-
-  return 'Resume';
-}
+export const revalidate = 3600;
 
 export async function generateMetadata(): Promise<Metadata> {
-  const recordMap = await getResumeRecordMap();
-  const pageTitle = recordMap ? getPageTitle(recordMap) : 'Resume';
+  const page = await getResumePage();
+  const pageTitle = page?.title || 'Resume';
 
   return {
     title: `${pageTitle} - ${env.title}`,
@@ -53,11 +27,11 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export const revalidate = 3600;
-
 export default async function Resume() {
-  const recordMap = await getResumeRecordMap();
-  if (!recordMap) {
+  const [markdown, page] = await Promise.all([getResumeMarkdown(), getResumePage()]);
+  const pageTitle = page?.title || 'Resume';
+
+  if (!markdown) {
     return (
       <div className="container py-6 sm:py-8">
         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
@@ -76,16 +50,9 @@ export default async function Resume() {
     );
   }
 
-  const headersList = await headers();
-  const host = headersList.get('host') ?? '';
-  const proto = headersList.get('x-forwarded-proto') ?? (host.includes('localhost') ? 'http' : 'https');
-  const origin = host ? `${proto}://${host}` : '';
-  const recordMapWithProxiedImages = transformRecordMapImageUrls(recordMap, origin);
-  const pageTitle = getPageTitle(recordMap);
-
   return (
     <div className="container py-6 sm:py-8">
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[200px_minmax(0,1fr)] lg:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_minmax(0,1fr)] lg:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[280px_minmax(0,1fr)]">
         <aside>
           <div className="sticky top-[var(--sticky-top)]">
             <ProfileSection />
@@ -96,8 +63,8 @@ export default async function Resume() {
             <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{pageTitle}</h1>
           </div>
           <Separator className="my-4" />
-          <div>
-            <ResumeNotionPageRenderer recordMap={recordMapWithProxiedImages} />
+          <div className="bg-card/30 rounded-xl p-6 md:p-8 border shadow-sm backdrop-blur-sm">
+            <MarkdownRenderer content={markdown} />
           </div>
         </section>
       </div>

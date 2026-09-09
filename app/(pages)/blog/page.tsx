@@ -31,7 +31,7 @@ export default async function Blog() {
 
   return (
     <div className="container py-6 sm:py-8">
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[200px_1fr_200px] lg:grid-cols-[240px_1fr_220px]">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[220px_1fr_220px] lg:grid-cols-[260px_1fr_240px]">
         {/* 좌측 사이드바 */}
         <aside>
           <div className="sticky top-[var(--sticky-top)]">

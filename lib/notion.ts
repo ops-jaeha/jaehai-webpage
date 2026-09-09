@@ -1,67 +1,130 @@
 import { Client } from '@notionhq/client';
+import { NotionToMarkdown } from 'notion-to-md';
 import type { Post, TagFilterItem } from '@/types/blog';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-import { NotionAPI } from 'notion-client';
 import env from '@/config/env.json';
-import type { ExtendedRecordMap } from 'notion-types';
 
 export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
 });
 
-export const notionX = new NotionAPI({
-  authToken: process.env.NOTION_TOKEN,
+export const n2m = new NotionToMarkdown({
+  notionClient: notion,
 });
 
-/** 이력서 페이지 RecordMap. 빌드 시 토큰이 없으면 null 반환. */
-export async function getResumeRecordMap(): Promise<ExtendedRecordMap | null> {
+// 이미지 블록을 프록시 URL로 변환하여 Notion S3 만료 방지
+n2m.setCustomTransformer('image', async (block) => {
+  const image = (
+    block as {
+      image?: {
+        type: string;
+        file?: { url: string };
+        external?: { url: string };
+        caption?: Array<{ plain_text: string }>;
+      };
+    }
+  ).image;
+  if (!image) return '';
+  const caption = image.caption?.map((c) => c.plain_text).join('') || '';
+  const url =
+    image.type === 'external' && image.external?.url
+      ? image.external.url
+      : `/api/notion-image?blockId=${block.id}`;
+  return `![${caption}](${url})`;
+});
+
+// Notion의 다단 컬럼(column_list & column) 레이아웃 지원
+n2m.setCustomTransformer('column_list', async (block) => {
+  const mdBlocks = await n2m.pageToMarkdown(block.id);
+  const childContent = n2m.toMarkdownString(mdBlocks);
+  return `\n\n<NotionColumnList>\n\n${childContent.parent}\n\n</NotionColumnList>\n\n`;
+});
+
+n2m.setCustomTransformer('column', async (block) => {
+  const mdBlocks = await n2m.pageToMarkdown(block.id);
+  const childContent = n2m.toMarkdownString(mdBlocks);
+  return `\n\n<NotionColumn>\n\n${childContent.parent}\n\n</NotionColumn>\n\n`;
+});
+
+// Notion 콜아웃(callout) 박스 지원
+n2m.setCustomTransformer('callout', async (block) => {
+  const callout = (
+    block as { callout?: { icon?: { emoji?: string }; rich_text?: Array<{ plain_text: string }> } }
+  ).callout;
+  const icon = callout?.icon?.emoji || '📝';
+  let title = callout?.rich_text?.map((t) => t.plain_text).join('') || '';
+  let childrenContent = '';
+
+  if (block.has_children) {
+    const mdBlocks = await n2m.pageToMarkdown(block.id);
+    const childContent = n2m.toMarkdownString(mdBlocks);
+    childrenContent = childContent.parent;
+  }
+
+  const safeTitle = JSON.stringify(title);
+  const safeIcon = JSON.stringify(icon);
+
+  return `\n\n<NotionCallout icon={${safeIcon}} title={${safeTitle}}>\n\n${childrenContent}\n\n</NotionCallout>\n\n`;
+});
+
+// Notion 북마크(bookmark) 및 link_preview 링크 카드 지원
+n2m.setCustomTransformer('bookmark', async (block) => {
+  const bookmark = (
+    block as { bookmark?: { url?: string; caption?: Array<{ plain_text: string }> } }
+  ).bookmark;
+  const url = bookmark?.url || '';
+  const caption = bookmark?.caption?.map((c) => c.plain_text).join('') || url;
+  const safeUrl = JSON.stringify(url);
+  const safeCaption = JSON.stringify(caption);
+
+  return `\n\n<NotionBookmark url={${safeUrl}} title={${safeCaption}} />\n\n`;
+});
+
+n2m.setCustomTransformer('link_preview', async (block) => {
+  const linkPreview = (block as { link_preview?: { url?: string } }).link_preview;
+  const url = linkPreview?.url || '';
+  const safeUrl = JSON.stringify(url);
+
+  return `\n\n<NotionBookmark url={${safeUrl}} title={${safeUrl}} />\n\n`;
+});
+
+/** 이력서 페이지의 Markdown 콘텐츠 조회 */
+export async function getResumeMarkdown(): Promise<string | null> {
   try {
-    return await notionX.getPage(env.notion_ids.resume);
-  } catch {
+    const mdblocks = await n2m.pageToMarkdown(env.notion_ids.resume);
+    const mdString = n2m.toMarkdownString(mdblocks);
+    return mdString.parent || '';
+  } catch (error) {
+    console.error('[getResumeMarkdown error]:', error);
     return null;
   }
 }
 
-// URL이 만료되었는지 확인하는 함수
-function isUrlExpired(url: string): boolean {
+/** 이력서 페이지 메타데이터/제목 조회 */
+export async function getResumePage(): Promise<{ title: string } | null> {
   try {
-    const urlObj = new URL(url);
-    const expires = urlObj.searchParams.get('X-Amz-Expires');
-    const dateParam = urlObj.searchParams.get('X-Amz-Date');
-
-    if (!expires || !dateParam) return false;
-
-    // X-Amz-Date 파싱 (YYYYMMDDTHHMMSSZ 형식)
-    const year = parseInt(dateParam.slice(0, 4));
-    const month = parseInt(dateParam.slice(4, 6)) - 1; // 월은 0부터 시작
-    const day = parseInt(dateParam.slice(6, 8));
-    const hour = parseInt(dateParam.slice(9, 11));
-    const minute = parseInt(dateParam.slice(11, 13));
-    const second = parseInt(dateParam.slice(13, 15));
-
-    const signedTime = new Date(year, month, day, hour, minute, second);
-    const expirationTime = new Date(signedTime.getTime() + parseInt(expires) * 1000);
-
-    return Date.now() > expirationTime.getTime();
-  } catch {
-    return false;
+    const page = (await notion.pages.retrieve({
+      page_id: env.notion_ids.resume,
+    })) as PageObjectResponse;
+    if (!page || !('properties' in page)) return { title: 'Resume' };
+    const titleProp = page.properties.title;
+    const title =
+      titleProp?.type === 'title' ? (titleProp.title[0]?.plain_text ?? 'Resume') : 'Resume';
+    return { title };
+  } catch (error) {
+    console.error('[getResumePage error]:', error);
+    return null;
   }
 }
 
-function getCoverImage(cover: PageObjectResponse['cover']): string {
+function getCoverImage(pageId: string, cover: PageObjectResponse['cover']): string {
   if (!cover) return '';
 
   switch (cover.type) {
     case 'external':
       return cover.external.url;
     case 'file':
-      const fileUrl = cover.file.url;
-      // 만료 여부 체크는 하지만, 클라이언트에서 처리하도록 URL은 그대로 반환
-      if (isUrlExpired(fileUrl)) {
-        console.warn('Notion 이미지 URL이 만료될 수 있음:', fileUrl);
-        // 만료되었어도 URL은 반환 - 클라이언트에서 fallback 처리
-      }
-      return fileUrl;
+      return `/api/notion-image?pageId=${encodeURIComponent(pageId)}`;
     default:
       return '';
   }
@@ -72,28 +135,29 @@ function getPostMetadata(page: PageObjectResponse): Post {
 
   return {
     id: page.id,
-    title: properties.title.type === 'title' ? (properties.title.title[0]?.plain_text ?? '') : '',
+    title: properties.title?.type === 'title' ? (properties.title.title[0]?.plain_text ?? '') : '',
     description:
-      properties.description.type === 'rich_text'
+      properties.description?.type === 'rich_text'
         ? (properties.description.rich_text[0]?.plain_text ?? '')
         : '',
-    thumbnail: getCoverImage(page.cover),
+    thumbnail: getCoverImage(page.id, page.cover),
     tags:
-      properties.tags.type === 'multi_select'
+      properties.tags?.type === 'multi_select'
         ? properties.tags.multi_select.map((tag) => tag.name)
         : [],
-    createdAt: properties.createdAt.type === 'date' ? (properties.createdAt.date?.start ?? '') : '',
+    createdAt:
+      properties.createdAt?.type === 'date' ? (properties.createdAt.date?.start ?? '') : '',
     modifiedAt: page.last_edited_time,
     slug:
-      properties.slug.type === 'rich_text' ? (properties.slug.rich_text[0]?.plain_text ?? '') : '',
+      properties.slug?.type === 'rich_text' ? (properties.slug.rich_text[0]?.plain_text ?? '') : '',
   };
 }
 
-// getPostBySlug 함수를 RecordMap을 반환하도록 수정
+/** Slug를 통한 블로그 상세 내용(Markdown) 및 메타데이터 조회 */
 export const getPostBySlug = async (
   slug: string
 ): Promise<{
-  recordMap: ExtendedRecordMap | null;
+  markdown: string | null;
   post: Post | null;
 }> => {
   try {
@@ -121,24 +185,23 @@ export const getPostBySlug = async (
 
     if (!page) {
       return {
-        recordMap: null,
+        markdown: null,
         post: null,
       };
     }
 
-    // notion-client를 사용해 페이지의 전체 콘텐츠(RecordMap)를 가져옵니다.
-    const recordMap = await notionX.getPage(page.id);
+    const mdblocks = await n2m.pageToMarkdown(page.id);
+    const mdString = n2m.toMarkdownString(mdblocks);
 
     return {
-      recordMap,
+      markdown: mdString.parent || '',
       post: getPostMetadata(page),
     };
-  } catch {
-    return { recordMap: null, post: null };
+  } catch (error) {
+    console.error(`[getPostBySlug error for slug=${slug}]:`, error);
+    return { markdown: null, post: null };
   }
 };
-
-// --- 아래 코드는 기존 코드와 동일합니다 ---
 
 export interface GetPublishedPostsParams {
   tag?: string;
@@ -146,6 +209,7 @@ export interface GetPublishedPostsParams {
   pageSize?: number;
   startCursor?: string;
 }
+
 export interface GetPublishedPostsResponse {
   posts: Post[];
   hasMore: boolean;
@@ -199,7 +263,8 @@ export const getPublishedPosts = async ({
 
     const posts = response.results
       .filter((page): page is PageObjectResponse => 'properties' in page)
-      .map(getPostMetadata);
+      .map(getPostMetadata)
+      .filter((post) => Boolean(post.slug));
 
     return {
       posts,
@@ -244,53 +309,4 @@ export const getTags = async (): Promise<TagFilterItem[]> => {
   } catch {
     return [{ id: 'all', name: '전체', count: 0 }];
   }
-};
-
-export interface CreatePostParams {
-  title: string;
-  tag: string;
-  content: string;
-}
-
-export const createPost = async ({ title, tag, content }: CreatePostParams) => {
-  const response = await notion.pages.create({
-    parent: {
-      database_id: env.notion_ids.posts,
-    },
-    properties: {
-      title: {
-        title: [
-          {
-            text: {
-              content: title,
-            },
-          },
-        ],
-      },
-      description: {
-        rich_text: [
-          {
-            text: {
-              content: content,
-            },
-          },
-        ],
-      },
-      tags: {
-        multi_select: [{ name: tag }],
-      },
-      status: {
-        select: {
-          name: 'Public',
-        },
-      },
-      createdAt: {
-        date: {
-          start: new Date().toISOString(),
-        },
-      },
-    },
-  });
-
-  return response;
 };

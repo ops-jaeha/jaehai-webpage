@@ -4,25 +4,30 @@ import rehypeSlug from 'rehype-slug';
 import Link from 'next/link';
 import type { ComponentPropsWithoutRef } from 'react';
 import { NotionBookmark } from '@/components/NotionBookmarkClient';
+import { decode_component_data } from '@/lib/mdx-component-data';
+
+interface CalloutData {
+  icon?: string;
+  title?: string;
+}
 
 // Custom Callout Component
 export function NotionCallout({
-  icon = '📝',
-  title,
-  subtitle,
+  data,
   children,
 }: {
-  icon?: string;
-  title?: string;
-  subtitle?: string;
+  data?: string;
   children?: React.ReactNode;
 }) {
+  const callout = decode_component_data<CalloutData>(data);
+  const icon = callout?.icon || '📝';
+  const title = callout?.title;
+
   return (
     <div className="notion-callout">
       <div className="notion-callout-icon">{icon}</div>
       <div className="notion-callout-content">
         {title && <div className="text-foreground font-semibold">{title}</div>}
-        {subtitle && <p className="text-muted-foreground mt-0.5 text-sm">{subtitle}</p>}
         {children}
       </div>
     </div>

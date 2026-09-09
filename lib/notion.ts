@@ -3,6 +3,7 @@ import { NotionToMarkdown } from 'notion-to-md';
 import type { Post, TagFilterItem } from '@/types/blog';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import env from '@/config/env.json';
+import { fetch_og_data } from '@/lib/og';
 
 export const notion = new Client({
   auth: process.env.NOTION_TOKEN,
@@ -100,11 +101,35 @@ n2m.setCustomTransformer('callout', async (block) => {
     children_content = childContent.parent;
   }
 
-  const safe_title = JSON.stringify(title);
-  const safe_icon = JSON.stringify(icon);
+  // next-mdx-remote는 보안을 위해 `prop={expression}` 형태의 JSX 표현식 속성을 전부
+  // 제거한다(removeJavaScriptExpressions). 그래서 동적 값은 일반 문자열 속성 하나에
+  // base64 JSON으로 실어 보낸다 - 이 형태만 stripping 대상에서 제외된다.
+  const encoded = encode_component_data({ icon, title });
 
-  return `\n\n<NotionCallout icon={${safe_icon}} title={${safe_title}}>\n\n${children_content}\n\n</NotionCallout>\n\n`;
+  return `\n\n<NotionCallout data="${encoded}">\n\n${children_content}\n\n</NotionCallout>\n\n`;
 });
+
+/** 커스텀 MDX 컴포넌트에 동적 데이터를 안전하게 전달하기 위한 인코딩 (see NotionCallout 주석) */
+function encode_component_data(data: unknown): string {
+  return Buffer.from(JSON.stringify(data), 'utf-8').toString('base64');
+}
+
+// 북마크 카드는 방문자 브라우저가 아니라 페이지 생성(ISR) 시점에 서버에서
+// 한 번만 OG 메타데이터를 가져와 마크다운에 그대로 박아 넣는다.
+// (Vercel 무료 플랜에서 방문할 때마다 클라이언트가 /api/og 를 호출하지 않도록)
+async function build_bookmark_markup(url: string, caption: string): Promise<string> {
+  if (!url) return '';
+
+  const og_data = await fetch_og_data(url);
+  const title = caption || og_data?.title || url;
+  const description = og_data?.description || '';
+  const image = og_data?.image || '';
+  const favicon = og_data?.favicon || '';
+
+  const encoded = encode_component_data({ url, title, description, image, favicon });
+
+  return `\n\n<NotionBookmark data="${encoded}" />\n\n`;
+}
 
 // Notion 북마크(bookmark) 및 link_preview 링크 카드 지원
 n2m.setCustomTransformer('bookmark', async (block) => {
@@ -112,25 +137,16 @@ n2m.setCustomTransformer('bookmark', async (block) => {
     block as { bookmark?: { url?: string; caption?: Array<{ plain_text: string }> } }
   ).bookmark;
   const url = bookmark?.url || '';
-  const caption = bookmark?.caption?.map((c) => c.plain_text).join('') || url;
+  const caption = bookmark?.caption?.map((c) => c.plain_text).join('') || '';
 
-  if (!url) return '';
-
-  const safe_url = JSON.stringify(url);
-  const safe_caption = JSON.stringify(caption);
-
-  return `\n\n<NotionBookmark url={${safe_url}} title={${safe_caption}} />\n\n`;
+  return build_bookmark_markup(url, caption);
 });
 
 n2m.setCustomTransformer('link_preview', async (block) => {
   const link_preview = (block as { link_preview?: { url?: string } }).link_preview;
   const url = link_preview?.url || '';
 
-  if (!url) return '';
-
-  const safe_url = JSON.stringify(url);
-
-  return `\n\n<NotionBookmark url={${safe_url}} title={${safe_url}} />\n\n`;
+  return build_bookmark_markup(url, '');
 });
 
 /** 이력서 페이지의 Markdown 콘텐츠 조회 */

@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="container flex max-w-lg items-start py-6 sm:py-8">
+    <div className="container max-w-lg py-6 sm:py-8">
       <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-[200px_minmax(0,calc(72rem-240px))] lg:grid-cols-[240px_minmax(0,calc(72rem-240px))]">
         <aside className="order-2 md:order-none">
           <div className="sticky top-[var(--sticky-top)]">

@@ -11,7 +11,7 @@ export default function Header() {
           <div className="flex min-w-0 items-center justify-start">
             <Link
               href="/"
-              className="text-base font-normal sm:text-xl"
+              className="block truncate text-base font-normal sm:text-xl"
               aria-label="홈"
             >
               <span className="font-bold">Jaehai</span>.Opslog
